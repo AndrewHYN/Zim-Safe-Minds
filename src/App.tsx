@@ -1,8 +1,9 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { CRISIS_COPY, guideReply } from "./lib/demoGuide.mjs";
+import CarePath from "./CarePath";
 
-type Screen = "home" | "chat" | "support" | "about";
+type Screen = "home" | "chat" | "support" | "about" | "pathway";
 type ChatMessage = { role: "guide" | "you"; text: string; urgent?: boolean };
 const initial: ChatMessage = { role: "guide", text: "Hey, you're welcome here. This is a scripted demonstration, not a therapist or live AI. You don't have to share personal details. What's on your mind today?" };
 const topics = ["I'm feeling stressed", "I feel alone", "I'm worried about something", "I want to speak to a professional"];
@@ -41,6 +42,7 @@ export default function App(){
     <button className={screen==="home"?"active":""} onClick={()=>go("home")}>Home</button>
     <button className={screen==="about"?"active":""} onClick={()=>go("about")}>Our mission</button>
     <button className={screen==="support"?"active":""} onClick={()=>go("support")}>Find support</button>
+    <button className={screen==="pathway"?"active":""} onClick={()=>go("pathway")}>Care navigator</button>
     <button className="nav-cta" onClick={start}>Start talking <span aria-hidden="true">↗</span></button>
    </nav>
   </div></header>
@@ -50,7 +52,7 @@ export default function App(){
      <div className="hero-copy"><div className="eyebrow"><span className="eyebrow-line"/> MADE FOR REAL LIFE IN ZIMBABWE</div>
       <h1>A safe space<br/>to <em>talk.</em><br/>A path to <span className="underlined">real support.</span></h1>
       <p>Sometimes the hardest part is finding a place to begin. Zim Safe Minds is exploring a gentler first step toward mental wellbeing and qualified human care.</p>
-      <div className="hero-actions"><button className="btn primary" onClick={start}>Try the guided demo <span>↗</span></button><button className="btn subtle" onClick={()=>go("support")}>How support works <span>→</span></button></div>
+      <div className="hero-actions"><button className="btn primary" onClick={start}>Try the guided demo <span>↗</span></button><button className="btn subtle" onClick={()=>go("pathway")}>Explore care options <span>→</span></button></div>
       <div className="hero-note"><span className="shield-icon">✓</span> Private within this browser tab · No account needed for the demo</div>
      </div>
      <div className="hero-visual" aria-label="Preview of the scripted support chat">
@@ -76,7 +78,7 @@ export default function App(){
    {screen==="chat" && <section className="container chat-layout">
     <aside className="chat-side"><span className="eyebrow">YOUR SPACE</span><h2>One thought<br/>at a time.</h2><p>This is a scripted, local demonstration. It doesn't understand every situation or monitor your safety.</p><div className="side-line"/>
      <button onClick={()=>setStep(0)} className="side-link">◌ <span>Take a grounding pause</span> ↗</button>
-     <button onClick={()=>go("support")} className="side-link">↗ <span>Explore human support</span> ↗</button>
+     <button onClick={()=>go("pathway")} className="side-link">↗ <span>Explore care options</span> ↗</button>
      <button onClick={reset} className="side-link">↺ <span>Clear this conversation</span></button>
      <div className="side-reminder">Please don't share identifying health information. Messages aren't saved or sent to a server by this demo.</div>
     </aside>
@@ -90,16 +92,17 @@ export default function App(){
      <div className="chat-footnote">Scripted demo only · Not therapy, diagnosis or emergency response</div>
     </div>
    </section>}
+   {screen==="pathway" && <CarePath />}
    {screen==="support" && <section className="container content-page"><span className="eyebrow">A PATH TO REAL SUPPORT</span><h1>Because sometimes,<br/><em>you need a person.</em></h1><p className="lead">Our goal is to help people in Zimbabwe reach qualified mental health professionals without fear, confusion or unnecessary barriers. Professional introductions and bookings are <strong>not live yet.</strong></p>
     <div className="journey"><article><span>01</span><h3>Choose what matters</h3><p>In a future pilot, browse by location, availability, modality, affordability and language.</p></article><article><span>02</span><h3>Know who you're meeting</h3><p>Only properly checked, consenting providers would appear in the directory.</p></article><article><span>03</span><h3>Connect with control</h3><p>Request an introduction only when ready. No chat transcript is shared by default.</p></article></div>
-    <div className="info-panel"><b>Why no therapist list today?</b><p>We haven't completed independent provider verification or established clinical partnerships. Showing unverified contacts would break the trust we're trying to build.</p><button className="btn primary" onClick={start}>Try the chat demonstration ↗</button></div>
+    <div className="info-panel"><b>Why no therapist list today?</b><p>We haven't completed independent provider verification or established clinical partnerships. Showing unverified contacts would break the trust we're trying to build.</p><button className="btn primary" onClick={()=>go("pathway")}>Open the care navigator ↗</button></div>
    </section>}
    {screen==="about" && <section className="container content-page"><span className="eyebrow">OUR REASON FOR EXISTING</span><h1>Mental wellbeing help<br/>should feel <em>reachable.</em></h1><p className="lead">Zim Safe Minds began with one question: what if a young person who finds it difficult to open up could start quietly, and still have a credible path to qualified care?</p>
     <div className="mission-grid"><article><span>OUR MISSION</span><h3>Human care comes first.</h3><p>We propose AI-assisted emotional expression as a bridge, never a diagnosis engine or a replacement for clinical treatment.</p></article><article><span>OUR FIRST PILOT</span><h3>Zimbabwean youth aged 18–35.</h3><p>We intend to co-design with local mental health professionals, validate barriers and measure actual access to care.</p></article><article><span>OUR LONG-TERM VISION</span><h3>Accessible for everyone.</h3><p>We're designing toward affordable, multilingual, mobile-friendly support, while keeping the initial demonstration adults-only.</p></article></div>
     <button className="btn primary" onClick={()=>go("support")}>Explore the human-support vision ↗</button>
    </section>}
   </main>
-  <footer className="footer"><div className="container footer-grid"><div><div className="footer-brand"><Logo/> Zim Safe Minds</div><p>A safe space to talk. A path to real support.</p></div><div className="footer-links"><button onClick={()=>go("about")}>Our mission</button><button onClick={()=>go("support")}>Human support</button><button onClick={()=>setHelpOpen(true)}>Urgent help</button></div></div><div className="container footer-end"><span>Early research prototype · Made for Zimbabwe</span><span>Not a clinical service or real AI chat</span></div></footer>
+  <footer className="footer"><div className="container footer-grid"><div><div className="footer-brand"><Logo/> Zim Safe Minds</div><p>A safe space to talk. A path to real support.</p></div><div className="footer-links"><button onClick={()=>go("about")}>Our mission</button><button onClick={()=>go("support")}>Human support</button><button onClick={()=>go("pathway")}>Care navigator</button><button onClick={()=>setHelpOpen(true)}>Urgent help</button></div></div><div className="container footer-end"><span>Early research prototype · Made for Zimbabwe</span><span>Not a clinical service or real AI chat</span></div></footer>
   <button className="help-floating" onClick={()=>setHelpOpen(true)}>Need urgent help? ↗</button>
   {consentOpen && <div className="overlay" role="presentation"><div className="modal" role="dialog" aria-modal="true" aria-labelledby="consent-title"><span className="eyebrow">BEFORE YOU BEGIN</span><h2 id="consent-title">This is a demonstration.</h2><p>Responses are scripted, not AI or a human counselor. The demo isn't medical advice, therapy, diagnosis, or emergency response. Don't enter identifying health information. Messages remain only in this tab and vanish on refresh.</p><p>For adults 18+ only. If you need immediate assistance, use your local emergency services or visit a hospital.</p><div className="modal-actions"><button className="btn subtle" onClick={()=>setConsentOpen(false)}>Not now</button><button className="btn primary" onClick={()=>{setConsented(true);setConsentOpen(false);go("chat");}}>I understand · Continue ↗</button></div></div></div>}
   {helpOpen && <div className="overlay" role="presentation"><div className="modal" role="dialog" aria-modal="true" aria-labelledby="help-title"><span className="eyebrow urgent-eyebrow">URGENT SUPPORT</span><h2 id="help-title">You don't have to wait here.</h2><p>{CRISIS_COPY}</p><p>There is no live person monitoring this application. We have not verified any local crisis hotline for this demo, so we won't display unverified numbers.</p><button className="btn primary" onClick={()=>setHelpOpen(false)}>Close this message</button></div></div>}
