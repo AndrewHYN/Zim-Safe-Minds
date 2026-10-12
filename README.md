@@ -8,7 +8,7 @@
 
 ## 1. The idea
 
-Zim Safe Minds is a **mental wellbeing navigation platform**. It begins with a private, supportive, low-pressure experience to help people articulate how they feel, and aims to bridge them into **qualified human mental health care** when they choose or may need it. The project grew from a discussion about young Zimbabweans who may be reluctant to open up to adults, worried about stigma, unsure whom to contact, or intimidated by a clinical first step.
+Zim Safe Minds is a **human-centered, AI-assisted mental wellbeing and care-navigation platform**. AI-guided reflection is a core planned feature — not something being removed. The current interactive prototype uses transparent scripted responses until clinical oversight, safety evaluation and a secure AI backend can be established. It begins with a private, supportive, low-pressure experience to help people articulate how they feel, and aims to bridge them into **qualified human mental health care** when they choose or may need it. The project grew from a discussion about young Zimbabweans who may be reluctant to open up to adults, worried about stigma, unsure whom to contact, or intimidated by a clinical first step.
 
 Our long-term vision serves **everyone**, but the **initial pilot focuses on consenting young adults (18–35) in Zimbabwe**, consistent with the Zimbabwe Youth Innovation HackLab 2026 opportunity and simpler, safer initial safeguarding requirements. Access for minors and a wider public launch are **not** in the present scope.
 
@@ -201,3 +201,9 @@ This project is a **founder-led prototype**, intended for transparent developmen
 - [Founder submission checklist](docs/LAUNCH_CHECKLIST_2026.md)
 
 **Deployment:** The `Deploy demo to GitHub Pages` workflow can be run manually after enabling Pages with GitHub Actions as the source in Repository Settings → Pages. It builds the Vite site with the correct subpath, and does not run on every push. Do not advertise a GitHub Pages URL until the workflow reports a successful deployment.
+
+## Medical Afterglow design milestone
+
+Our interface has been redesigned in a distinctive medical-tech style inspired by low-glare Afterglow themes, without copying another product’s assets or code. A **Daylight** theme uses soft clinical whites, teal, sea blue and sage; **Afterglow** mode uses deep medical navy, sea glass and mint. Switch between them in the header. The redesigned landing, chat and care-navigation journeys use consistent accessible controls, stronger typography, subtle luminous detailing, mobile layouts and a visible immediate-help action. No purple AI gradients, fictional therapist profiles or fake social proof.
+
+**AI remains a major product pillar**. The present chat remains a scripted demonstration, clearly marked as such. Read the [design tokens, safety boundaries and AI roadmap](docs/DESIGN_SYSTEM.md).

@@ -23,12 +23,13 @@ export default function CarePath(){
   const [budget,setBudget]=useState<Budget>("free");
   const [language,setLanguage]=useState<Language>("English");
   const [copied,setCopied]=useState(false);
+  const [copyError,setCopyError]=useState(false);
   const summary=careSummary({mode,budget,language});
   async function copy(){
     try {
       await navigator.clipboard.writeText(summary);
-      setCopied(true);
-    } catch {setCopied(false);}
+      setCopied(true);setCopyError(false);
+    } catch {setCopied(false);setCopyError(true);}
   }
   return <section className="container navigator-page">
     <div className="navigator-header">
@@ -43,8 +44,8 @@ export default function CarePath(){
         {stage===1 && <><span className="eyebrow">STEP 02 / 03</span><h2>What about affordability?</h2><p>We won't assume that everyone can pay for private therapy.</p><div className="option-grid">{budgets.map(b=><button key={b.value} type="button" className={"option-card "+(budget===b.value?"selected":"")} aria-pressed={budget===b.value} onClick={()=>setBudget(b.value)}><b>{b.title}</b><small>{b.subtitle}</small><span aria-hidden="true">{budget===b.value?"●":"○"}</span></button>)}</div></>}
         {stage===2 && <><span className="eyebrow">STEP 03 / 03</span><h2>Which language works for you?</h2><p>This is a preference, not a guarantee of availability.</p><div className="option-grid">{languages.map(l=><button key={l} type="button" className={"option-card "+(language===l?"selected":"")} aria-pressed={language===l} onClick={()=>setLanguage(l)}><b>{l}</b><small>Preferred language</small><span aria-hidden="true">{language===l?"●":"○"}</span></button>)}</div></>}
         <div className="navigator-actions">
-          <button type="button" className="btn subtle" onClick={()=>setStage(s=>Math.max(0,s-1) as Stage)} disabled={stage===0}>← Back</button>
-          {stage<2?<button type="button" className="btn primary" onClick={()=>setStage(s=>(s+1) as Stage)}>Continue →</button>:<button type="button" className="btn primary" onClick={()=>document.getElementById("care-outcome")?.scrollIntoView({behavior:"smooth"})}>View options ↓</button>}
+          <button type="button" className="button button-outline" onClick={()=>setStage(s=>Math.max(0,s-1) as Stage)} disabled={stage===0}>← Back</button>
+          {stage<2?<button type="button" className="button button-dark" onClick={()=>setStage(s=>(s+1) as Stage)}>Continue →</button>:<button type="button" className="button button-dark" onClick={()=>document.getElementById("care-outcome")?.scrollIntoView({behavior:"smooth"})}>View options ↓</button>}
         </div>
       </section>
       <aside id="care-outcome" className="navigator-outcome" aria-label="Your next steps">
@@ -58,10 +59,11 @@ export default function CarePath(){
           <span className="service-label">INDEPENDENT PUBLIC SERVICE · NOT OUR PARTNER</span>
           <h3>Friendship Bench Zimbabwe</h3>
           <p>Friendship Bench publishes free online mental-health support through trained supporters, with services in English, Shona and Ndebele. Check its official site for current details, availability and eligibility before contacting them.</p>
-          <a className="btn primary" href="https://www.friendshipbenchzimbabwe.org/online" target="_blank" rel="noopener noreferrer">Visit the official service ↗</a>
+          <a className="button button-dark" href="https://www.friendshipbenchzimbabwe.org/online" target="_blank" rel="noopener noreferrer">Visit the official service ↗</a>
         </div>
         <div className="future-service"><h3>Verified therapists — planned</h3><p>A future pilot could offer opt-in introductions to licensed professionals after independent credential checks, clinical partnerships and privacy approval. No booking or referral is live.</p></div>
         <button className="copy-preferences" type="button" onClick={copy}>{copied?"✓ Copied preferences":"Copy my preferences (not chat text)"} ↗</button>
+        {copyError && <p role="status" className="navigator-disclaimer">Copying is unavailable in this browser. You can review your preferences above without sharing any chat text.</p>}
         <p className="navigator-disclaimer">This is navigation information, not treatment, diagnosis, triage, crisis monitoring or endorsement of a provider. If you are in immediate danger, seek emergency medical care instead.</p>
       </aside>
     </div>
