@@ -47,7 +47,7 @@ Prominent urgent-help entry points must always be available. The product must ne
 
 ## 5. What's implemented today
 
-The repository contains an interactive, mobile-responsive React/Vite demo:
+The repository contains an interactive, mobile-responsive React/Vite demo. The demo includes a care-preference navigator: no user messages are analyzed to make clinical judgments, and no information is sent to a provider. The Friendship Bench external link points to its independent publicly advertised service, not a signed partnership.
 
 | Feature | Status | Notes |
 |---|---|---|
@@ -58,19 +58,21 @@ The repository contains an interactive, mobile-responsive React/Vite demo:
 | Clear safety / consent disclosure | **Built** | Adults-only demonstration; no account / server |
 | Prominent urgent-help guidance | **Built** | No unverified emergency numbers or live monitoring |
 | Human-support pathway preview | **Built** | Clearly labeled **not live** |
+| Preference-based care navigator | **Built** | Connection mode, affordability and language, with local-only preferences |
+| Public service discovery | **Built** | External link to Friendship Bench official service; no partnership claimed |
 | Clinician verification / partner onboarding | **Not started** | No providers listed without verification |
 | Real AI integration | **Not started** | Gated on safeguards, privacy and oversight |
 | Booking, referrals, therapist accounts | **Not started** | Require clinical and operational partnerships |
 | Authentication, secure storage, back end | **Not started** | Intentionally no personal health-data backend |
 | Public pilot, efficacy, clinical validation | **Not started** | No clinical benefit claimed |
 
-> The prototype does not make network calls for conversation messages, persist conversations to local storage, or connect to clinics. It does load a web font from Google Fonts, and deploying it online would create normal web-server access logs; therefore **do not claim absolute anonymity**. A real deployment requires a privacy review, analytics/logging minimization and preferably self-hosted fonts.
+> The prototype does not make network calls for conversation messages, persist conversations to local storage, or connect to clinics. The care navigator includes an outbound link to an independent service; leaving the demo opens that service's website. Deploying online produces normal hosting logs, so **do not claim absolute anonymity**. We removed the external web-font request to minimize third-party tracking. A real clinical pilot requires a formal privacy review and logging minimization.
 
 ## 6. Technology choice
 
 - **Frontend:** React 19, TypeScript, Vite 7, handcrafted CSS (no component framework lock-in).
 - **Conversation logic:** scripted JavaScript flows in `src/lib/demoGuide.mjs` with Node unit tests.
-- **Hosting target:** static frontend deployable to Vercel or similar. **Not yet deployed.**
+- **Hosting target:** Vercel preferred; manual GitHub Pages workflow is also available. **A public preview is not yet confirmed.**
 - **Future AI:** server-side adapter with secret keys, vetted prompt/policy layer, independent safety evaluation, emergency UI and qualified human escalation. No secrets in client JS.
 - **Future backend:** select only after documented privacy, consent, data-retention and Zimbabwe legal review. Encrypt sensitive data in transit and at rest; carefully scope clinician/admin access, audit changes, give users deletion options and minimize stored information.
 
@@ -190,3 +192,12 @@ public/favicon.svg        # product icon
 ## Contributing / project ownership
 
 This project is a **founder-led prototype**, intended for transparent development and potential collaboration with Zimbabwean mental health professionals and youth organizations. Do not commit credentials, medical data, real-user conversations or unverified therapist listings. Architecture is intentionally modest until the human-care operations are validated. License status: **all rights reserved pending a deliberate license choice**; no open-source license is granted by omission.
+## HackLab 2026 milestone pack
+
+- [Grant application copy — 200-word summary and 500-word innovation description](docs/APPLICATION_2026.md)
+- [USD 5,000 costed 12-month pilot and metrics](docs/MILESTONES_BUDGET_2026.md)
+- [Evidence register, competitor landscape and field research](docs/EVIDENCE_AND_RESEARCH_2026.md)
+- [90-second pitch and judge Q&A](docs/PITCH_2026.md)
+- [Founder submission checklist](docs/LAUNCH_CHECKLIST_2026.md)
+
+**Deployment:** The `Deploy demo to GitHub Pages` workflow can be run manually after enabling Pages with GitHub Actions as the source in Repository Settings → Pages. It builds the Vite site with the correct subpath, and does not run on every push. Do not advertise a GitHub Pages URL until the workflow reports a successful deployment.
