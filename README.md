@@ -131,3 +131,7 @@ Open the local URL printed by Vite. Contributions should be small, focused pull 
 The **working Talk chat is now in the top hero**, replacing the decorative faux conversation. People see real message bubbles, starter suggestions and a strong message composer without scrolling through an entire second section. The high-contrast, frosted sea-glass card deliberately stands out against the dark Afterglow page (and remains distinct in Daylight).
 
 The consent modal remains mandatory before sending messages. The composer launches consent on focus/tap; a chosen starter is held locally and sent only after informed confirmation. No real AI, therapy, remote chat persistence or professional booking was introduced. The old duplicated lower chat layout was removed and replaced with clearly labeled grounding/awareness/human support choices.
+
+## v0.3.1 — Original graphics restored, visible chat beneath
+
+Per team feedback, the floating glowing **original hero illustration** is kept intact (orbit rings, floating chat preview, gentle notes). The **real interactive** high-contrast sea-glass chat follows **directly below the hero graphics**, before the other cards; it is not buried behind repeated text sections. The hero conversation button scrolls to that working chat, and consent still gates all chat actions. Daylight theme remains optional.

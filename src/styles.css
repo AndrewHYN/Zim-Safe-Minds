@@ -526,3 +526,81 @@
  .trio-app .trio-quick-actions{grid-template-columns:1fr;gap:9px}
  .trio-app .trio-quick-actions button{min-height:68px}
 }
+
+
+/* v0.3.1 — Bring BACK the original Afterglow hero art;
+   place the fully interactive, high-contrast chat directly below it. */
+.trio-app .trio-hero-grid{
+ grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);
+ gap:clamp(28px,4.8vw,70px);
+ min-height:625px;
+ padding-top:68px;padding-bottom:67px;
+}
+.trio-app .trio-hero-content h1{font-size:clamp(53px,5.6vw,81px);line-height:1.09}
+.trio-app .trio-hero-art{display:grid;min-height:515px;position:relative}
+.trio-app .trio-glass-card{transform:rotate(-2deg)}
+.trio-app .trio-real-chat-zone{
+ background:var(--deep);
+ border-top:1px solid color-mix(in srgb,var(--accent),transparent 68%);
+ border-bottom:1px solid color-mix(in srgb,var(--accent),transparent 68%);
+ padding:74px 0 90px;
+}
+.trio-app .trio-real-chat-layout{max-width:990px}
+.trio-app .trio-real-chat-intro{
+ display:flex;align-items:end;justify-content:space-between;
+ gap:25px;margin-bottom:27px;color:#edfff9;
+}
+.trio-app .trio-real-chat-intro .section-label{color:#8de8cc}
+.trio-app .trio-real-chat-intro h2{
+ color:#ecfff5;font-size:clamp(31px,3.6vw,46px);
+ letter-spacing:-.06em;line-height:1.2;margin:14px 0 10px;
+}
+.trio-app .trio-real-chat-intro h2 em{color:#a5e4cd;font-family:Georgia,serif;font-weight:400}
+.trio-app .trio-real-chat-intro p{
+ color:#b9dad4;font-size:13px;line-height:1.75;max-width:720px;margin:0;
+}
+.trio-app .trio-chat-direction{
+ color:#bce7d9;display:flex;align-items:center;gap:15px;
+ font:800 10px ui-monospace,monospace;letter-spacing:.07em;white-space:nowrap;
+}
+.trio-app .trio-chat-direction span:last-child{font-size:28px;line-height:1}
+.trio-app .trio-real-chat-zone .trio-hero-chat{
+ width:100%;max-width:990px;margin-inline:auto;
+ scroll-margin-top:105px;
+ box-shadow:0 0 0 7px #66dac314,0 23px 70px #02191e7d;
+}
+.trio-app .trio-real-chat-zone .trio-hero-chat .trio-chat-log{
+ height:310px;
+}
+.trio-app .trio-real-chat-zone .trio-prompts{
+ grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.trio-app .trio-real-chat-zone .trio-chat-topline{padding-top:21px}
+.trio-app .trio-band{border-top:none}
+@media(max-width:1100px){
+ .trio-app .trio-hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;min-height:0}
+ .trio-app .trio-hero-art{min-height:465px}
+ .trio-app .trio-hero-content h1{font-size:clamp(45px,5.5vw,66px)}
+}
+@media(max-width:900px){
+ .trio-app .trio-hero-grid{
+  grid-template-columns:1fr;gap:22px;
+  padding-top:60px;padding-bottom:48px;
+ }
+ .trio-app .trio-hero-content h1{font-size:clamp(48px,7.5vw,70px)}
+ .trio-app .trio-hero-art{min-height:435px}
+ .trio-app .trio-real-chat-zone{padding:56px 0 68px}
+}
+@media(max-width:610px){
+ .trio-app .trio-hero-grid{padding-top:48px;padding-bottom:35px;gap:11px}
+ .trio-app .trio-hero-content h1{font-size:clamp(44px,10.2vw,57px)}
+ .trio-app .trio-hero-art{min-height:360px}
+ .trio-app .trio-glass-card{transform:none;width:min(310px,94%)}
+ .trio-app .trio-real-chat-zone{padding:43px 0 53px}
+ .trio-app .trio-real-chat-intro{align-items:flex-start;gap:12px;margin-bottom:18px}
+ .trio-app .trio-real-chat-intro h2{font-size:33px}
+ .trio-app .trio-real-chat-intro p{font-size:12px}
+ .trio-app .trio-chat-direction{display:none}
+ .trio-app .trio-real-chat-zone .trio-hero-chat .trio-chat-log{height:305px}
+ .trio-app .trio-real-chat-zone .trio-prompts{grid-template-columns:1fr 1fr}
+}

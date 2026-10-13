@@ -3,15 +3,17 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 const app=readFileSync(new URL("../src/App.tsx",import.meta.url),"utf8");
 const css=readFileSync(new URL("../src/styles.css",import.meta.url),"utf8");
-test("the hero contains the only active chat, not a decorative mockup",()=>{
+test("the original beautiful hero graphic is restored and real chat comes directly beneath it",()=>{
  assert.match(app,/className="trio-chat-panel trio-hero-chat"/);
- assert.doesNotMatch(app,/trio-glass-card/);
+ assert.equal((app.match(/className="trio-glass-card"/g)||[]).length,1);
  assert.equal((app.match(/id="trio-entry"/g)||[]).length,1);
  assert.equal((app.match(/className="trio-chat-panel/g)||[]).length,1);
- const hero=app.indexOf('className="trio-hero"');
- const band=app.indexOf('className="trio-band"');
+ const art=app.indexOf('className="trio-glass-card"');
+ const section=app.indexOf('className="trio-real-chat-zone"');
  const chat=app.indexOf('className="trio-chat-panel trio-hero-chat"');
- assert.ok(hero<chat&&chat<band);
+ const band=app.indexOf('className="trio-band"');
+ assert.ok(art<section&&section<chat&&chat<band);
+ assert.match(app,/scrollIntoView/);
 });
 test("chat entry and starters require consent before sending",()=>{
  assert.ok(app.includes("readOnly={!accepted}"));

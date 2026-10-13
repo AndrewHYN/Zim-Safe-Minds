@@ -36,12 +36,21 @@ export default function App(){
  useEffect(()=>{chatLogRef.current?.scrollTo({top:chatLogRef.current.scrollHeight,behavior:"smooth"});},[history]);
  useEffect(()=>{document.title="Zim Safe Minds | Talk · Learn · Connect";},[]);
  function navigate(next:Tab){setTab(next);setMobile(false);window.scrollTo({top:0,behavior:"smooth"});}
- function talk(){navigate("talk"); if(!accepted){setConsent(true);}else{requestAnimationFrame(()=>document.getElementById("trio-entry")?.focus());}}
+ function talk(){
+   navigate("talk");
+   requestAnimationFrame(()=>{
+     document.getElementById("talk-space")?.scrollIntoView({behavior:"smooth",block:"start"});
+     if(!accepted)setConsent(true);else document.getElementById("trio-entry")?.focus({preventScroll:true});
+   });
+ }
  function selectSuggestion(value:string){if(!accepted){setPendingPrompt(value);setConsent(true);}else{send(value);}}
  function beginAfterConsent(){
    setAccepted(true);setConsent(false);setTab("talk");
    if(pendingPrompt){send(pendingPrompt);setPendingPrompt(null);}
-   else requestAnimationFrame(()=>document.getElementById("trio-entry")?.focus());
+   requestAnimationFrame(()=>{
+     document.getElementById("talk-space")?.scrollIntoView({behavior:"smooth",block:"start"});
+     if(!pendingPrompt)document.getElementById("trio-entry")?.focus({preventScroll:true});
+   });
  }
  function send(value:string){
   const input=value.trim();if(!input)return;
@@ -67,11 +76,31 @@ export default function App(){
      <div className="trio-hero"><div className="layout trio-hero-grid">
       <div className="trio-hero-content"><span className="section-label"><span className="section-dot"/> A SAFER FIRST STEP STARTS HERE</span>
        <h1>It's okay to <em>not feel okay.</em></h1>
-       <p>When you need somewhere to start, talk it through here. Explore mental-health resources and take the next step toward human support whenever you choose.</p>
-       <div className="trio-hero-buttons"><button className="button button-dark button-large" onClick={talk}>Open the chat <span aria-hidden="true">↗</span></button><button className="button button-outline button-large" onClick={()=>navigate("connect")}>Find human support <span aria-hidden="true">↗</span></button></div>
+       <p>Some conversations are hard to begin. We’re making it easier to express what’s on your mind, discover mental-health resources, and reach real people when you choose.</p>
+       <div className="trio-hero-buttons"><button className="button button-dark button-large" onClick={talk}>Try guided conversation <span aria-hidden="true">↓</span></button><button className="button button-outline button-large" onClick={()=>navigate("connect")}>Find human support <span aria-hidden="true">↗</span></button></div>
        <div className="trio-trustline"><span>✳ Youth-first</span><span>◎ Your choice</span><span>♡ Human care matters</span></div>
        <p className="trio-tech-note">Early prototype: today's conversation is scripted, not connected to a live AI or clinician.</p>
       </div>
+      <div className="trio-hero-art" aria-label="Illustration of a calm, supportive conversation">
+        <div className="trio-orbit one"/><div className="trio-orbit two"/>
+        <div className="trio-glass-card">
+          <div className="trio-glass-top"><Brand small/><div><strong>Your space</strong><small>Reflect · Explore · Reach out</small></div><span className="trio-availability">DEMO</span></div>
+          <div className="trio-glass-messages"><span>THERE IS NO PERFECT WAY TO START</span><div className="mini-guide">Hi, you're welcome here. What's been on your mind lately?</div><div className="mini-user">A lot, honestly.</div><div className="mini-guide">Would it help to talk a little, or would you prefer to explore human support?</div></div>
+          <div className="trio-glass-input">Say what's on your mind <span>↑</span></div>
+        </div>
+        <div className="trio-annotation first">One step at a time <span>✦</span></div><div className="trio-annotation second">No pressure. No judgment.</div>
+      </div>
+     </div></div>
+
+     <section className="trio-real-chat-zone" aria-labelledby="chat-section-heading">
+      <div className="layout trio-real-chat-layout">
+        <div className="trio-real-chat-intro">
+          <div><span className="section-label"><span className="section-dot"/> THE CONVERSATION · INTERACTIVE PREVIEW</span>
+           <h2 id="chat-section-heading">Your space to <em>talk it through.</em></h2>
+           <p>Here is the real, working conversation demo. Pick a starter or write a message. You're in control, and you can move to human support whenever you choose.</p>
+          </div>
+          <div className="trio-chat-direction"><span>01 — REFLECT</span><span>↓</span></div>
+        </div>
       <section className="trio-chat-panel trio-hero-chat" aria-label="Interactive guided reflection" id="talk-space">
         <header className="trio-chat-header">
          <div className="preview-identity"><Brand small/><div><strong>Let's talk.</strong><span>Your guided reflection space</span></div></div>
@@ -101,7 +130,8 @@ export default function App(){
         </form>
         <div className="trio-chat-foot"><span>ⓘ</span> {accepted?"Messages stay in this tab; they are not sent to a clinician.":"Not live AI or therapy. Review the demo disclosure before chatting."}</div>
       </section>
-     </div></div>
+      </div>
+     </section>
      <div className="trio-band"><div className="layout"><span>AN OUTLET TO TALK</span><span>✳</span><span>A LIBRARY TO LEARN</span><span>✳</span><span>A PATH TO CONNECT</span></div></div>
      <div className="layout trio-below-chat">
       <div className="trio-support-heading"><span className="section-label">SUPPORT BEYOND THE CONVERSATION</span><h2>There is no <em>single right way</em> to begin.</h2><p>Take a quiet moment, explore trusted information, or move directly toward human support. You're always in control.</p></div>
