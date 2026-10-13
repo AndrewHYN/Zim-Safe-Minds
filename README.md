@@ -1,5 +1,7 @@
 # Zim Safe Minds
 
+[**HackLab 2026 presentation (PowerPoint + PDF)**](docs/presentation/README.md) · [**Live Vercel demo**](https://zim-safe-minds.vercel.app/) · [**Presenter guide**](docs/presentation/PRESENTER_GUIDE.md)
+
 **A safe space to talk. A path to real support.**  
 **Zimbabwe Youth Innovation HackLab 2026 · Category 1: Holistic Youth Health & Well-being**
 

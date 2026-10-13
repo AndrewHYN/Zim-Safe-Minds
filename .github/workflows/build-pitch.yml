@@ -1,0 +1,66 @@
+name: Build HackLab pitch slides
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/generate-hacklab-pitch.mjs'
+      - 'public/brand/**'
+      - 'docs/presentation/README.md'
+      - 'docs/presentation/PRESENTER_GUIDE.md'
+      - '.github/workflows/build-pitch.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: zsm-presentation-build
+  cancel-in-progress: false
+
+jobs:
+  presentation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare presentation dependencies
+        run: |
+          npm install --no-audit --no-fund --no-save pptxgenjs
+          if ! command -v libreoffice >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y libreoffice-impress
+          fi
+      - name: Render the editable slide deck
+        run: node tools/generate-hacklab-pitch.mjs
+      - name: Create offline PDF
+        run: |
+          libreoffice -env:UserInstallation=file:///tmp/lo-zsm-pitch-${{ github.run_id }} --headless --convert-to pdf --outdir docs/presentation docs/presentation/Zim_Safe_Minds_HackLab_2026_Pitch.pptx
+          test -s docs/presentation/Zim_Safe_Minds_HackLab_2026_Pitch.pptx
+          test -s docs/presentation/Zim_Safe_Minds_HackLab_2026_Pitch.pdf
+      - name: Publish both slide formats to main
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/presentation/Zim_Safe_Minds_HackLab_2026_Pitch.pptx docs/presentation/Zim_Safe_Minds_HackLab_2026_Pitch.pdf
+          if git diff --staged --quiet; then
+            echo 'No generated presentation changes'
+          else
+            git commit -m 'docs: publish generated HackLab presentation PPTX and PDF'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Save workflow artifact backup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zim-safe-minds-hacklab-presentation
+          path: |
+            docs/presentation/Zim_Safe_Minds_HackLab_2026_Pitch.pptx
+            docs/presentation/Zim_Safe_Minds_HackLab_2026_Pitch.pdf
+          if-no-files-found: warn
