@@ -36,7 +36,7 @@ test("moderation failure returns an unavailable response rather than an invented
  try{
    const {res,snapshot}=createResponse();
    await handler(reqFor("A normal synthetic example","moderation-unique"),res);
-   assert.equal(snapshot().code,503);assert.equal(snapshot().body.code,"AI_UNAVAILABLE");
+   assert.equal(snapshot().code,503);assert.equal(snapshot().body.code,"OPENAI_UPSTREAM_ERROR");assert.equal(snapshot().body.reply,undefined);
  }finally{
    global.fetch=original;if(key)process.env.OPENAI_API_KEY=key;else delete process.env.OPENAI_API_KEY;
  }
