@@ -123,3 +123,5 @@ Open the local URL printed by Vite. Contributions should be small, focused pull 
 **Product walkthrough:** open the [live demo](https://andrewhyn.github.io/Zim-Safe-Minds/) and show the three main tabs in order. Work on real AI and clinician bookings is deliberately deferred until safety and partnership milestones. The research proposition remains reducing *stigma and friction in the first step toward human help*.
 
 **Developer notes:** [Three-tab product scope and acceptance criteria](docs/PRODUCT_THREE_TABS.md) · [Design system](docs/DESIGN_SYSTEM.md).
+
+**Default appearance:** Afterglow (dark medical navy with mint/sea-glass accents). Visitors can still switch to Daylight from the header; no account required.

@@ -23,7 +23,7 @@ function Brand({small=false}:{small?:boolean}){
 }
 export default function App(){
  const [tab,setTab]=useState<Tab>("talk");
- const [theme,setTheme]=useState<Theme>("daylight");
+ const [theme,setTheme]=useState<Theme>("afterglow");
  const [mobile,setMobile]=useState(false);
  const [consent,setConsent]=useState(false);
  const [accepted,setAccepted]=useState(false);
