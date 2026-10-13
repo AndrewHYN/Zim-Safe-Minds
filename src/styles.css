@@ -604,3 +604,72 @@
  .trio-app .trio-real-chat-zone .trio-hero-chat .trio-chat-log{height:305px}
  .trio-app .trio-real-chat-zone .trio-prompts{grid-template-columns:1fr 1fr}
 }
+
+
+/* v0.4 — Approved luminous embrace branding. One icon across product UI. */
+.trio-app .trio-brandmark,
+.trio-app .trio-brandmark.trio-small {
+  display:inline-flex;justify-content:center;align-items:center;
+  width:52px;height:52px;flex:none;padding:0;border:0;
+  border-radius:0;box-shadow:none;background:none;color:inherit;overflow:visible;
+}
+.trio-app .trio-brandmark.trio-small{width:37px;height:37px}
+.trio-app .trio-brandmark img {
+ display:block;width:100%;height:100%;object-fit:contain;
+ filter:drop-shadow(0 4px 11px rgba(80,226,196,.14));
+ transition:filter .35s ease,transform .35s ease;
+}
+.trio-app .brand:hover .trio-brandmark img,
+.trio-app .footer-brand:hover img,
+.trio-app .trio-brandmark:hover img {
+ filter:drop-shadow(0 2px 15px rgba(96,238,205,.44));
+ transform:translateY(-1px);
+}
+.trio-app .brand{gap:5px;isolation:isolate}
+.trio-app .brand>span:last-child {letter-spacing:-1.15px}
+.trio-app .trio-glass-top .trio-brandmark,
+.trio-app .trio-hero-chat .trio-chat-header .trio-brandmark {
+ background:none;color:inherit;border:0;box-shadow:none;
+}
+.trio-app .brand-signature{
+ display:inline-flex;width:min(335px,100%);max-width:100%;
+ border:0;border-radius:16px;line-height:0;
+}
+.trio-app .brand-wordmark-glass{
+ display:flex;align-items:center;justify-content:center;
+ width:100%;padding:13px 14px;
+ border:1px solid rgba(161,228,216,.52);
+ border-radius:16px;
+ background:linear-gradient(135deg,#e9faf5 0%,#d8efe9 100%);
+ box-shadow:0 0 0 1px rgba(112,230,206,.09),0 10px 36px rgba(0,12,25,.17);
+ overflow:hidden;
+ transition:box-shadow .35s ease,transform .35s ease;
+}
+.trio-app .brand-signature:hover .brand-wordmark-glass{
+ transform:translateY(-2px);
+ box-shadow:0 0 27px rgba(102,229,195,.23),0 14px 36px rgba(0,12,25,.27);
+}
+.trio-app .brand-wordmark-glass img{
+ display:block;width:100%;height:auto;max-width:305px;object-fit:contain;
+ filter:none;transform:none;
+}
+.trio-app .brand-signature:hover .brand-wordmark-glass img {
+ filter:none;transform:none;
+}
+@keyframes zsm-afterglow-breathe{
+ 0%,100%{filter:drop-shadow(0 3px 8px rgba(94,217,202,.18))}
+ 50%{filter:drop-shadow(0 3px 15px rgba(94,217,202,.32))}
+}
+@media (prefers-reduced-motion:no-preference) {
+ .trio-app .trio-header .trio-brandmark img {animation:zsm-afterglow-breathe 9s ease-in-out infinite}
+}
+@media(max-width:610px){
+ .trio-app .trio-header .trio-brandmark {width:41px;height:41px}
+ .trio-app .brand-signature {max-width:285px}
+ .trio-app .brand-wordmark-glass{padding:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ .trio-app .trio-brandmark img,
+ .trio-app .brand-wordmark-glass{animation:none!important;transition:none!important}
+ .trio-app .brand-signature:hover .brand-wordmark-glass{transform:none}
+}

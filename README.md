@@ -135,3 +135,9 @@ The consent modal remains mandatory before sending messages. The composer launch
 ## v0.3.1 — Original graphics restored, visible chat beneath
 
 Per team feedback, the floating glowing **original hero illustration** is kept intact (orbit rings, floating chat preview, gentle notes). The **real interactive** high-contrast sea-glass chat follows **directly below the hero graphics**, before the other cards; it is not buried behind repeated text sections. The hero conversation button scrolls to that working chat, and consent still gates all chat actions. Daylight theme remains optional.
+
+## v0.4 — Luminous Embrace visual identity
+
+The generated brand mark (two figures forming an embracing heart and subtle signal line) is used consistently in the header, demo cards and conversation interface. The matching full **Zim Safe Minds** wordmark is shown in the footer on a pale sea-glass inset so its dark-blue lettering remains legible in Afterglow. It is not stretched or recolored. The new symbol is used for the 32-pixel browser favicon and 180-pixel Apple touch icon.
+
+Source assets: `public/brand/zim-safe-minds-mark.webp`, `public/brand/zim-safe-minds-wordmark.webp`, `public/favicon-32.png`, and `public/apple-touch-icon.png`. Assets are built from the approved generated artwork, resized and optimized for web delivery; no third-party logo fonts or image hosts are required. The icon has a quiet glow animation **only in the main header**, disabled for visitors who prefer reduced motion. Asset URLs honor Vite's base path, keeping Vercel and GitHub Pages compatible.
