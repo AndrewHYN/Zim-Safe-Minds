@@ -22,12 +22,12 @@ This is an **internal concept pitch** for prospective teammates to critique and 
 
 | Moment | Open | What to say |
 | --- | --- | --- |
-| 0:00–0:30 | Homepage | Show the youth-friendly promise; introduce stigma and hesitation as the primary root cause |
-| 0:30–1:15 | Talk it through | Pick a scripted starter prompt; point out that real AI and clinical decisions are not live |
-| 1:15–1:40 | Grounding pause | Show a small, optional exercise; no diagnosis or treatment |
-| 1:40–2:30 | Care navigator | Choose online support, affordability and Shona, then view the optional copyable first-contact note |
-| 2:30–2:50 | Independent support | Visit the published Friendship Bench website; explicitly state it is **not** our partner |
-| 2:50–3:00 | Close | Invite teammates to challenge the product and choose a responsibility |
+| 0:00–0:40 | **Talk** | Explain stigma as the root cause; show the calming Daylight/Afterglow interface and consent-gated scripted conversation |
+| 0:40–1:05 | **Talk** | Try one supportive scripted prompt and the optional grounding pause; state real AI is a future, safety-gated feature |
+| 1:05–1:55 | **Learn** | Open a poster, use category search, read an article and show its independent source |
+| 1:55–2:40 | **Connect** | Create a sample appointment inquiry, then select language/affordability preferences and copy a consent-controlled first-contact note |
+| 2:40–2:50 | **Connect** | Visit the published Friendship Bench service; explicitly state it is independent, not a partnership |
+| 2:50–3:00 | Close | State the goal: a safe route from hesitation to real care, not just a chatbot |
 
 **Demo:** https://andrewhyn.github.io/Zim-Safe-Minds/
 

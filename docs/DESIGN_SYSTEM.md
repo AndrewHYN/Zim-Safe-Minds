@@ -39,3 +39,15 @@ AI-assisted reflection is a **planned key feature**, not removed:
 
 ## Inspiration
 Afterglow design system: https://ui.xiaowei.fun/libraries/afterglow (inspiration only, no upstream component/code/assets incorporated).
+
+## Three-tab prototype (v0.2, 13 October 2026)
+
+The root interface has exactly **three primary tabs**. The brand leads to Talk; there is no separate dashboard, inbox, social feed, login, public forum or extra main navigation.
+
+1. **Talk:** landing hero + consent-first local scripted conversation, suggestion prompts, clear urgent-help entry and optional grounding. Future AI-guided reflection is core to the vision, but the current prototype is explicitly *not connected* to any LLM provider. The chat is never submitted or stored on a server.
+2. **Learn:** curated poster-style original awareness content, six source-linked stories, category and keyword search, session-only saves, educational article dialog. Not live news, not unverified automated content, no social media scraping.
+3. **Connect:** human support pathway, local-only appointment-planning draft and preference selector. Users can copy messages they review and choose where to send. External Friendship Bench link is a public independent resource, not a signed partnership. No providers are booked or contacted by this app.
+
+**Future milestone gates:** verified mental-health providers, partner-approved scheduling, security/privacy/clinical review, then safe AI service. No deployed API keys, no medical model pretending to diagnose, no fabricated providers, no automated clinical referrals.
+
+Theme design: the low-glare **Afterglow** and bright **Daylight** palette remain; typography and editorial cards are intentionally calm, not neon AI-themed.

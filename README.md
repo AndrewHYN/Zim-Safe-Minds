@@ -13,9 +13,9 @@
 
 Our proposed product combines:
 
-1. **AI-guided reflection (core vision):** a gentle place to find words for what you're feeling. The **current demo uses scripted replies**, not a live AI model.
-2. **Simple self-help tools:** optional, non-clinical grounding exercises; users can skip the chat entirely.
-3. **A path to real people:** choose language, affordability and online/in-person preferences, view publicly available services, and prepare a first-contact message. In a future approved pilot, users could request **consent-based introductions to independently verified professionals**.
+1. **Talk:** a gentle entry page with optional guided reflection and grounding exercises. **AI is a core planned feature**, but the demo responses are scripted.
+2. **Learn:** original awareness posters and six educational, source-linked articles with topic search and filters; not a social feed or live news.
+3. **Connect:** learn about accessible human care, choose language/format/affordability, and prepare an optional first-contact or appointment inquiry draft. **No real appointments or referrals occur today**. An approved pilot could enable consent-based introductions to independently verified professionals.
 
 **The problem isn't that Zimbabwe has no mental-health services.** Services such as Friendship Bench already exist. We want to test whether a private, approachable bridge can help young people **actually take the first step to trustworthy human care**. We will not claim that this works until we gather evidence.
 
@@ -25,13 +25,13 @@ The HackLab focus is **one category only**: Category 1. Our primary root cause i
 
 **Open:** https://andrewhyn.github.io/Zim-Safe-Minds/
 
-In a 3–4 minute walkthrough, try:
+In a 3–4 minute walkthrough, try the **three primary tabs**:
 
-1. **Home:** understand the problem, who the service is for and the promise.
-2. **Talk it through:** open the scripted supportive conversation, try a starter prompt, and see the prominent safety information.
-3. **Grounding:** open a short, optional pause exercise.
-4. **Find support / Care navigator:** choose connection format, affordability and language. Review the first-contact draft that can be copied by the user—**no chat transcript is sent**.
-5. **Themes:** switch between **Daylight** (clinical blue/teal/mint) and **Afterglow** (low-glare navy/sea-glass/mint).
+1. **Talk:** a welcoming landing screen, the consent-gated scripted chat, optional starter prompts and a grounding pause.
+2. **Learn:** poster cards, topic filters, search, a full awareness article, its independent source link, and session-only saves.
+3. **Connect:** the appointment-planning *preview* (choose support format/timing and copy an inquiry), preference-based navigation, and the independent published Friendship Bench resource. **No actual booking or doctor connection is activated.**
+
+Use the theme switch for **Daylight** (medical teal/mint) and **Afterglow** (low-glare navy/sea glass). The three tabs are deliberate: **Talk · Learn · Connect**, with urgent-help guidance always accessible.
 
 **Please do not enter real mental-health histories, diagnoses, phone numbers or other sensitive health information in the demo.** It is not monitored by a therapist or crisis team.
 
@@ -115,3 +115,11 @@ npm run dev
 Open the local URL printed by Vite. Contributions should be small, focused pull requests with test/build results and mobile screenshots where useful. **No production AI, collection of health histories, provider booking or referral endpoints without the clinical, privacy and security approvals** documented in [SAFETY.md](docs/SAFETY.md).
 
 **Our short-term goal:** a reliable, easy-to-explain prototype and a truthful team-led HackLab application—not an unsafe rushed therapy product.
+
+## v0.2 — Three tabs, one clear story
+
+**Talk · Learn · Connect** is the focused product demonstrated for the HackLab pitch. AI-guided reflection remains part of our vision, not a production claim. Learn contains six original editorial awareness posts with source links (not scraped or live news). Connect has both a user-controlled first-contact note and an **appointment inquiry planner**, but no calendar reservation, live clinician messaging, payment or real provider agreement.
+
+**Product walkthrough:** open the [live demo](https://andrewhyn.github.io/Zim-Safe-Minds/) and show the three main tabs in order. Work on real AI and clinician bookings is deliberately deferred until safety and partnership milestones. The research proposition remains reducing *stigma and friction in the first step toward human help*.
+
+**Developer notes:** [Three-tab product scope and acceptance criteria](docs/PRODUCT_THREE_TABS.md) · [Design system](docs/DESIGN_SYSTEM.md).

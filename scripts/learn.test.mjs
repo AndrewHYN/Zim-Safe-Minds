@@ -10,9 +10,9 @@ test("awareness library has six nonclinical stories with verified-looking source
 });
 test("topic filters and text query work together",()=>{
  assert.equal(filterPosts("","All").length,posts.length);
- assert.equal(filterPosts("appointment","All").length,1);
+ assert.equal(filterPosts("first support","All").length,1);
  assert.equal(filterPosts("","Find help").length,2);
  assert.equal(filterPosts("appointment","Healthy habits").length,0);
- assert.equal(filterPosts("STRESS","All").length>=1,true);
+ assert.equal(filterPosts("LIFE","All").length>=1,true);
 });
 test("all articles have selectable categories",()=>{for(const p of posts)assert.ok(categories.includes(p.category));});
