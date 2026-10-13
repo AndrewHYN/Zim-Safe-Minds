@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { careSummary, careCopy } from "./lib/careOptions.mjs";
+import { careSummary, careCopy, firstContactNote } from "./lib/careOptions.mjs";
 
 type Mode = "online" | "in-person" | "either";
 type Budget = "free" | "low-cost" | "either";
@@ -23,13 +23,19 @@ export default function CarePath(){
   const [budget,setBudget]=useState<Budget>("free");
   const [language,setLanguage]=useState<Language>("English");
   const [copied,setCopied]=useState(false);
+  const [contactCopied,setContactCopied]=useState(false);
   const [copyError,setCopyError]=useState(false);
   const summary=careSummary({mode,budget,language});
+  const introduction=firstContactNote({mode,budget,language});
   async function copy(){
     try {
       await navigator.clipboard.writeText(summary);
       setCopied(true);setCopyError(false);
     } catch {setCopied(false);setCopyError(true);}
+  }
+  async function copyContact(){
+    try { await navigator.clipboard.writeText(introduction);setContactCopied(true);setCopyError(false); }
+    catch { setContactCopied(false);setCopyError(true); }
   }
   return <section className="container navigator-page">
     <div className="navigator-header">
@@ -61,6 +67,15 @@ export default function CarePath(){
           <p>Friendship Bench publishes free online mental-health support through trained supporters, with services in English, Shona and Ndebele. Check its official site for current details, availability and eligibility before contacting them.</p>
           <a className="button button-dark" href="https://www.friendshipbenchzimbabwe.org/online" target="_blank" rel="noopener noreferrer">Visit the official service ↗</a>
         </div>
+
+        <div className="referral-preview">
+          <div className="service-label">PREPARE A FIRST MESSAGE · OPTIONAL</div>
+          <h3>Know what to say before reaching out</h3>
+          <p>This is only a suggested message. Nothing is sent from this app. Review it, then choose whether and where to send it yourself.</p>
+          <pre aria-label="Suggested first contact message">{introduction}</pre>
+          <button className="copy-preferences" type="button" onClick={copyContact}>{contactCopied?"✓ Copied — review before sending":"Copy this message for me ↗"}</button>
+        </div>
+        <div className="handoff-steps" aria-label="How the care pathway works"><strong>The bridge to care</strong><ol><li>Explore your preferences without creating an account.</li><li>Review an independent service's published information.</li><li>Choose whether to contact them yourself.</li><li>In a future partner pilot, an introduction can happen only with explicit consent.</li></ol></div>
         <div className="future-service"><h3>Verified therapists — planned</h3><p>A future pilot could offer opt-in introductions to licensed professionals after independent credential checks, clinical partnerships and privacy approval. No booking or referral is live.</p></div>
         <button className="copy-preferences" type="button" onClick={copy}>{copied?"✓ Copied preferences":"Copy my preferences (not chat text)"} ↗</button>
         {copyError && <p role="status" className="navigator-disclaimer">Copying is unavailable in this browser. You can review your preferences above without sharing any chat text.</p>}
