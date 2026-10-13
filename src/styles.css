@@ -331,3 +331,12 @@
  .connect-page .navigator-page{padding-top:65px}
 }
 @media(prefers-reduced-motion:reduce){.trio-app *, .trio-app *:before,.trio-app *:after{transition:none!important;scroll-behavior:auto!important}}
+
+/* Shared width compatibility for the existing care navigator */
+.trio-app .container{width:min(1240px,calc(100% - 64px));margin-inline:auto}
+@media(max-width:900px){.trio-app .container{width:calc(100% - 36px)}}
+@media(max-width:610px){.trio-app .container{width:calc(100% - 30px)}}
+/* Small final-readability refinements */
+.trio-app select:focus-visible,.trio-app .option-card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.trio-app .public-service a{max-width:100%;text-align:center}
+.trio-app .learn-card:focus-within{box-shadow:0 0 0 2px color-mix(in srgb,var(--accent),transparent 70%)}

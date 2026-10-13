@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { posts, categories, filterPosts } from "./lib/learnContent.mjs";
 type Post = (typeof posts)[number];
 type LearnProps = { onTalk:()=>void; onConnect:()=>void };
@@ -7,6 +7,12 @@ export default function Learn({onTalk,onConnect}:LearnProps){
  const [query,setQuery]=useState("");
  const [active,setActive]=useState<Post|null>(null);
  const [saved,setSaved]=useState<string[]>([]);
+ useEffect(()=>{
+   if(!active)return;
+   const onKey=(e:KeyboardEvent)=>{if(e.key==="Escape")setActive(null);};
+   window.addEventListener("keydown",onKey);
+   return ()=>window.removeEventListener("keydown",onKey);
+ },[active]);
  const results=filterPosts(query,category);
  const featured=posts[0];
  function toggle(id:string){setSaved(current=>current.includes(id)?current.filter(x=>x!==id):[...current,id]);}
@@ -44,7 +50,7 @@ export default function Learn({onTalk,onConnect}:LearnProps){
   </div>
   {active&&<div className="modal-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setActive(null);}}>
     <article className="modal-dialog learn-article-modal" role="dialog" aria-modal="true" aria-labelledby="article-title">
-      <button className="article-close" onClick={()=>setActive(null)} aria-label="Close article">×</button>
+      <button className="article-close" autoFocus onClick={()=>setActive(null)} aria-label="Close article">×</button>
       <span className="section-label">{active.eyebrow} · {active.read}</span><h2 id="article-title">{active.title}</h2>
       <p className="article-deck">{active.excerpt}</p>{active.paragraphs.map((p,i)=><p key={i}>{p}</p>)}
       <a className="article-source" href={active.sourceUrl} target="_blank" rel="noopener noreferrer">Explore the source: {active.sourceLabel} ↗</a>
