@@ -340,3 +340,189 @@
 .trio-app select:focus-visible,.trio-app .option-card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .trio-app .public-service a{max-width:100%;text-align:center}
 .trio-app .learn-card:focus-within{box-shadow:0 0 0 2px color-mix(in srgb,var(--accent),transparent 70%)}
+
+
+/* v0.3 — visible, working chat: a light sea-glass panel in Afterglow.
+   Chat is the HERO now, not a low-contrast duplicate buried after 2 screens. */
+.trio-app .trio-hero-grid{
+  grid-template-columns:minmax(0,.91fr) minmax(0,1.09fr);
+  align-items:center;gap:clamp(28px,4vw,65px);
+  min-height:0;padding-top:66px;padding-bottom:73px;
+}
+.trio-app .trio-hero-content h1{font-size:clamp(49px,5vw,74px);line-height:1.09;margin:22px 0 18px}
+.trio-app .trio-hero-content>p:not(.trio-tech-note){font-size:15px;line-height:1.85}
+.trio-app .trio-hero-buttons{gap:10px;margin-top:26px}
+.trio-app .trio-trustline{margin-top:25px}
+.trio-app .trio-hero-chat{
+ --chat-panel:#f3fbf9; --chat-area:#e6f4f1; --chat-bubble:#fff;
+ --chat-line:#c4ddd9;--chat-ink:#133c46;--chat-muted:#466975;
+ --chat-accent:#126b78; --chat-accent-hover:#0f5965;
+ --chat-user:#146270; --chat-user-ink:#fff;
+ position:relative;z-index:2;isolation:isolate;
+ background:var(--chat-panel);color:var(--chat-ink);
+ border:2px solid #60cbbd;border-radius:22px;
+ box-shadow:0 0 0 7px #66dac314,0 34px 92px #02191e8c,0 4px 25px #37d8c332;
+ width:100%;max-width:none;transform:none;
+ overflow:hidden;
+}
+.trio-app .trio-hero-chat:before{
+ content:"";position:absolute;inset:0 0 auto;height:4px;z-index:4;
+ background:linear-gradient(90deg,#53e0b4,#4bbfca,#8de8ce);
+}
+.trio-app .trio-hero-chat .trio-chat-header{
+ background:#e6f5f0;padding:15px 20px 13px;
+ border-bottom:1px solid var(--chat-line);
+}
+.trio-app .trio-hero-chat .trio-brandmark{
+ background:#126b78;color:#edfff9;width:38px;height:38px;
+ box-shadow:0 3px 12px #0b6a7440;
+}
+.trio-app .trio-hero-chat .preview-identity strong{
+ color:var(--chat-ink);font-size:15px;letter-spacing:-.025em;
+}
+.trio-app .trio-hero-chat .preview-identity span:not(.trio-brandmark){color:var(--chat-muted);font-size:11px}
+.trio-app .chat-preview-pill{
+ display:inline-flex;align-items:center;gap:7px;
+ border:1px solid #b3d6d0;background:#fff;
+ border-radius:100px;padding:7px 10px;
+ color:#37636a;font:800 10px ui-monospace,monospace;
+ white-space:nowrap;letter-spacing:.015em;
+}
+.trio-app .chat-preview-dot{background:#33ab96;border-radius:50%;width:7px;height:7px}
+.trio-app .trio-chat-topline{
+ display:flex;align-items:start;justify-content:space-between;gap:10px;
+ padding:21px 22px 12px;background:var(--chat-panel);
+}
+.trio-app .trio-chat-topline>div>span{color:#237e87;font:800 10px ui-monospace,monospace;letter-spacing:.12em}
+.trio-app .trio-chat-topline h2{color:var(--chat-ink);font-size:24px;letter-spacing:-.05em;margin:7px 0 3px}
+.trio-app .trio-chat-topline p{color:var(--chat-muted);font-size:12px;line-height:1.55;margin:0}
+.trio-app .chat-clear{
+ flex:none;background:#fff;color:#325962;border:1px solid var(--chat-line);
+ border-radius:9px;padding:9px 11px;font:750 11px ui-sans-serif,system-ui,sans-serif;
+}
+.trio-app .chat-clear:hover{background:#d9f0ec}
+.trio-app .trio-hero-chat .trio-chat-log{
+ height:320px;min-height:0;padding:18px 22px 16px;
+ background:var(--chat-area);border-top:1px solid var(--chat-line);
+ scrollbar-color:#8fbdb9 transparent;
+}
+.trio-app .trio-hero-chat .trio-chat-row{gap:9px;align-items:flex-start;margin:0 0 14px}
+.trio-app .chat-guide-avatar{flex:none;display:grid;place-items:center;width:27px;height:27px;border-radius:9px;background:#c5e9df;color:#157e83;font-size:18px;font-weight:800}
+.trio-app .trio-hero-chat .trio-chat-bubble{
+ color:var(--chat-ink);background:var(--chat-bubble);
+ border:1px solid #d6e8e2;
+ box-shadow:0 3px 12px #14565b10;
+ font-size:13px;line-height:1.7;max-width:89%;padding:13px 15px;
+}
+.trio-app .trio-hero-chat .trio-chat-row.mine .trio-chat-bubble{
+ background:var(--chat-user);border-color:var(--chat-user);
+ color:var(--chat-user-ink);
+}
+.trio-app .trio-hero-chat .trio-prompts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:16px 0 0 36px}
+.trio-app .trio-hero-chat .trio-prompts button{
+ min-width:0;background:#f8fffd;border:1px solid #9fcac4;
+ color:#174751;box-shadow:0 2px 8px #1d766319;padding:13px 11px;
+}
+.trio-app .trio-hero-chat .trio-prompts button:hover{
+ background:#dff7ef;border-color:#2d8c8d;
+}
+.trio-app .trio-hero-chat .trio-prompts button strong{color:#16464e;font-size:11px}
+.trio-app .trio-hero-chat .trio-prompts button small{color:#50727a;font-size:10px}
+.trio-app .trio-hero-chat .trio-prompts button>span:last-child{color:#167782}
+.trio-app .trio-hero-chat .trio-chat-composer{
+ background:var(--chat-panel);padding:14px 17px 12px;
+ border-top:1px solid var(--chat-line);gap:9px;
+}
+.trio-app .trio-hero-chat .trio-chat-composer input{
+ height:51px;background:#fff;color:var(--chat-ink);
+ border:2px solid #93c6bf;border-radius:11px;
+ padding:13px 16px;font-size:14px;
+ box-shadow:0 3px 13px #134f4b12;
+}
+.trio-app .trio-hero-chat .trio-chat-composer input::placeholder{color:#5d7a81;opacity:1}
+.trio-app .trio-hero-chat .trio-chat-composer input:focus{
+ outline:3px solid #b6eee0;outline-offset:1px;border-color:#207d86;
+}
+.trio-app .trio-hero-chat .trio-chat-composer button{
+ width:auto;min-width:56px;height:51px;padding:0 14px;
+ background:#126c78;color:#fff;border-radius:11px;font:800 13px system-ui,sans-serif;
+ box-shadow:0 4px 12px #0f6e7533;
+}
+.trio-app .trio-hero-chat .trio-chat-composer button:hover:not(:disabled){background:#0e5661}
+.trio-app .trio-hero-chat .trio-chat-composer button:disabled{background:#b2cbca;color:#3e6469}
+.trio-app .trio-hero-chat .trio-chat-foot{
+ background:var(--chat-panel);color:#416b71;text-align:left;
+ padding:0 22px 15px;line-height:1.5;font-size:10px;
+}
+.trio-app .trio-hero-chat .trio-chat-foot span{color:#16838a;font-weight:900;margin-right:4px}
+.trio-app .trio-below-chat{
+ display:grid;grid-template-columns:1fr 1.12fr;gap:60px;
+ align-items:center;padding-top:94px;padding-bottom:68px;
+}
+.trio-app .trio-support-heading h2{
+ font-size:clamp(34px,4vw,51px);letter-spacing:-.06em;
+ line-height:1.16;margin:16px 0 15px;
+}
+.trio-app .trio-support-heading h2 em{color:var(--accent);font-family:Georgia,serif;font-weight:400}
+.trio-app .trio-support-heading p{color:var(--muted);line-height:1.85;font-size:13px}
+.trio-app .trio-quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.trio-app .trio-quick-actions button{
+ border:1px solid var(--line);background:var(--surface);
+ color:var(--ink);border-radius:13px;
+ min-width:0;min-height:95px;display:flex;align-items:center;gap:12px;
+ text-align:left;padding:15px;transition:border-color .2s,transform .2s;
+}
+.trio-app .trio-quick-actions button:hover{border-color:var(--accent);transform:translateY(-2px)}
+.trio-app .trio-quick-actions .quick-icon{
+ background:var(--light);color:var(--accent);
+ width:37px;height:37px;border-radius:11px;display:grid;place-items:center;
+ font-size:20px;flex:none;
+}
+.trio-app .trio-quick-actions button>span:nth-child(2){flex:1;min-width:0}
+.trio-app .trio-quick-actions strong{display:block;font-size:12px}
+.trio-app .trio-quick-actions small{
+ display:block;font-size:10px;color:var(--muted);line-height:1.55;margin-top:6px;
+}
+.trio-app .trio-quick-actions b{color:var(--accent);font-weight:700}
+.trio-app .trio-next-steps{margin-bottom:80px}
+@media(max-width:1100px){
+ .trio-app .trio-hero-grid{gap:27px;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)}
+ .trio-app .trio-hero-content h1{font-size:clamp(44px,5vw,60px)}
+ .trio-app .trio-hero-chat .trio-prompts{grid-template-columns:1fr 1fr;gap:7px}
+ .trio-app .trio-hero-chat .trio-chat-log{height:335px}
+ .trio-app .trio-below-chat{gap:27px}
+}
+@media(max-width:900px){
+ .trio-app .trio-hero-grid{grid-template-columns:1fr;gap:28px;padding-top:44px;padding-bottom:50px}
+ .trio-app .trio-hero-content h1{max-width:700px;font-size:clamp(46px,7vw,63px)}
+ .trio-app .trio-hero-chat{max-width:710px;margin-inline:auto}
+ .trio-app .trio-below-chat{grid-template-columns:1fr;padding-top:68px}
+}
+@media(max-width:610px){
+ .trio-app .trio-hero-grid{gap:20px;padding-top:33px;padding-bottom:39px}
+ .trio-app .trio-hero-content h1{font-size:clamp(39px,10vw,50px);line-height:1.11}
+ .trio-app .trio-hero-content>p:not(.trio-tech-note){font-size:13px;line-height:1.65}
+ .trio-app .trio-hero-buttons{flex-direction:row;align-items:stretch;gap:9px}
+ .trio-app .trio-hero-buttons .button{width:auto;flex:1;min-width:0;font-size:11px;padding:12px 11px}
+ .trio-app .trio-trustline{margin-top:17px;gap:10px;font-size:10px}
+ .trio-app .trio-hero-content .trio-tech-note{margin:5px 0 0}
+ .trio-app .trio-hero-chat{border-radius:17px;border-width:2px}
+ .trio-app .trio-hero-chat .trio-chat-header{padding:11px 13px}
+ .trio-app .chat-preview-pill{font-size:9px;padding:6px 7px}
+ .trio-app .trio-chat-topline{padding:14px 14px 9px}
+ .trio-app .trio-chat-topline h2{font-size:20px;margin:5px 0 2px}
+ .trio-app .trio-chat-topline p{font-size:11px}
+ .trio-app .trio-hero-chat .trio-chat-log{height:312px;padding:12px 12px 15px}
+ .trio-app .trio-hero-chat .trio-chat-bubble{font-size:12px;padding:11px 13px}
+ .trio-app .trio-hero-chat .trio-prompts{grid-template-columns:1fr 1fr;margin-left:0;gap:7px}
+ .trio-app .trio-hero-chat .trio-prompts button{padding:10px 9px}
+ .trio-app .trio-hero-chat .trio-prompts button strong{font-size:10px;line-height:1.3}
+ .trio-app .trio-hero-chat .trio-prompts button small{font-size:9px;line-height:1.4}
+ .trio-app .trio-hero-chat .trio-chat-composer{padding:11px 10px}
+ .trio-app .trio-hero-chat .trio-chat-composer input{height:48px;font-size:13px;padding:10px 11px}
+ .trio-app .trio-hero-chat .trio-chat-composer button{height:48px;min-width:56px;padding:0 9px}
+ .trio-app .trio-hero-chat .trio-chat-foot{padding:0 12px 12px;font-size:9px}
+ .trio-app .trio-below-chat{padding-top:53px;padding-bottom:38px}
+ .trio-app .trio-quick-actions{grid-template-columns:1fr;gap:9px}
+ .trio-app .trio-quick-actions button{min-height:68px}
+}

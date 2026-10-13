@@ -125,3 +125,9 @@ Open the local URL printed by Vite. Contributions should be small, focused pull 
 **Developer notes:** [Three-tab product scope and acceptance criteria](docs/PRODUCT_THREE_TABS.md) · [Design system](docs/DESIGN_SYSTEM.md).
 
 **Default appearance:** Afterglow (dark medical navy with mint/sea-glass accents). Visitors can still switch to Daylight from the header; no account required.
+
+## v0.3 — Visible chat on the opening screen
+
+The **working Talk chat is now in the top hero**, replacing the decorative faux conversation. People see real message bubbles, starter suggestions and a strong message composer without scrolling through an entire second section. The high-contrast, frosted sea-glass card deliberately stands out against the dark Afterglow page (and remains distinct in Daylight).
+
+The consent modal remains mandatory before sending messages. The composer launches consent on focus/tap; a chosen starter is held locally and sent only after informed confirmation. No real AI, therapy, remote chat persistence or professional booking was introduced. The old duplicated lower chat layout was removed and replaced with clearly labeled grounding/awareness/human support choices.
