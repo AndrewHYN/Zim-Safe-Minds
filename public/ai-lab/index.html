@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+ <meta name="robots" content="noindex,nofollow"/><meta name="theme-color" content="#071b27"/>
+ <meta name="description" content="Private experimental Zim Safe Minds AI Lab — consent-first prototype, not clinical care."/>
+ <link rel="icon" type="image/png" href="/favicon-32.png"/>
+ <link rel="stylesheet" href="./lab.css"/>
+ <title>Zim Safe Minds — AI Lab (Experimental)</title>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<div class="site">
+ <header class="navwrap">
+  <a class="identity" href="https://zim-safe-minds.vercel.app/" aria-label="Zim Safe Minds main prototype">
+   <img class="navmark" src="/brand/zim-safe-minds-mark.webp" alt="" width="48" height="48"/>
+   <span>Zim <em>Safe</em> Minds</span>
+  </a>
+  <div class="navright"><span class="labtag"><i></i> EXPERIMENTAL AI LAB</span><a class="backlink" href="https://zim-safe-minds.vercel.app/">Original demo <span aria-hidden="true">↗</span></a></div>
+ </header>
+
+ <section class="intro">
+  <div class="introcopy">
+   <p class="eyebrow"><span class="pindot"></span> A MORE HUMAN FIRST STEP <span class="eyebrowbar">/</span> ZIMBABWE</p>
+   <h1>You can start <span class="soft">where you are.</span></h1>
+   <p class="introsub">A space to find words for what's happening, pause, and explore real support. Guided by AI. <strong>Always with human care at the center.</strong></p>
+   <div class="micro"><span>01 / TALK</span><span>02 / FIND SUPPORT</span><span>03 / CHOOSE YOUR NEXT STEP</span></div>
+  </div>
+  <div class="haloart" aria-hidden="true"><div class="orbit orbit1"></div><div class="orbit orbit2"></div><div class="radiance"></div><img src="/brand/zim-safe-minds-mark.webp" alt="" width="200" height="200"/><span class="orbitlabel">care is a connection</span></div>
+ </section>
+
+ <main class="workspace">
+  <section class="chatcard" aria-label="Experimental AI conversation">
+   <div class="chathead">
+    <div class="chatid"><div class="avatar"><img src="/brand/zim-safe-minds-mark.webp" width="38" height="38" alt=""/></div><div><strong>Safe Minds Guide</strong><span id="modelState">AI preview · No account or transcript storage in this demo</span></div></div>
+    <button type="button" class="clear" id="resetBtn">↺ Reset</button>
+   </div>
+   <div class="notice"><span class="noticesigil" aria-hidden="true">✳</span><span>This is <strong>not therapy, diagnosis, or an emergency service.</strong> The AI can make mistakes. Nobody is monitoring or automatically receiving messages.</span></div>
+   <div class="chatstream" id="chatstream" aria-live="polite" aria-label="Chat messages">
+    <div class="timestamp">TODAY · PRIVATE DEMONSTRATION</div>
+    <div class="msg bot"><img class="tinyavatar" src="/brand/zim-safe-minds-mark.webp" width="28" height="28" alt=""/><div class="bubble">Hey, I'm glad you're here. You don't need to have the right words. What's been on your mind lately?</div></div>
+   </div>
+   <div class="crisis hidden" id="crisis" role="alert">
+    <div class="crisis-top"><span class="crisis-icon">!</span><strong>Let's focus on immediate safety</strong></div>
+    <p>If you or someone else may be in immediate danger, stop using this chat and contact local emergency services or go to the nearest emergency department now. Ask a trusted person to be with you if you can.</p>
+    <div class="crisis-actions"><a href="https://www.google.com/maps/search/?api=1&query=emergency+department+near+me" target="_blank" rel="noopener noreferrer">Find emergency departments ↗</a><button type="button" id="crisisSupport">See independent support</button></div>
+    <small>Maps is a separate service and may request your location. No doctor has been contacted and no alert has been sent.</small>
+   </div>
+   <div class="composer">
+    <div class="prompts" id="prompts"><button type="button" data-prompt="I've been feeling overwhelmed lately.">I'm overwhelmed</button><button type="button" data-prompt="I've been feeling lonely, and it's hard to talk about.">I feel lonely</button><button type="button" data-prompt="How can I find someone to talk to in Zimbabwe?">Find someone to talk to</button></div>
+    <form id="chatForm" class="chatForm">
+     <label for="message" class="sr-only">Your message to the AI guide</label>
+     <textarea id="message" rows="2" maxlength="1200" placeholder="Share what you'd like to talk about…" disabled required></textarea>
+     <button id="send" type="submit" disabled aria-label="Send chat message">↗</button>
+    </form>
+    <div class="composerfoot"><span id="statusText" role="status">Please read and accept the safety information first.</span><span>Messages are sent to OpenAI with consent · <strong>no account required</strong></span></div>
+   </div>
+  </section>
+
+  <aside class="side" id="support" aria-label="Human support resources">
+   <div class="support-head"><span class="eyebrow">02 / CONNECT</span><span class="icon-plus" aria-hidden="true">✳</span></div>
+   <h2>Real people.<br/><em>Real support.</em></h2>
+   <p class="sideintro">Finding help should not feel like another hurdle. Explore independently listed support and choose whether to reach out.</p>
+   <div class="area"><label for="region">YOUR AREA</label><select id="region"><option value="Zimbabwe">Anywhere in Zimbabwe</option><option value="Harare">Harare</option><option value="Bulawayo">Bulawayo</option><option value="Mutare">Mutare</option><option value="Gweru">Gweru</option><option value="Other">Other area</option></select><p>We don't request GPS, track your location, or send your area to the AI.</p></div>
+   <div id="providers"><p class="loading-service">Loading public support information…</p></div>
+   <div class="handoff">
+    <div><span aria-hidden="true">↗</span><strong>Want help with the first message?</strong></div>
+    <p>Copy a simple introduction for a provider. No private chat is forwarded.</p>
+    <button type="button" id="copyBtn">Copy a first-contact message <span>⧉</span></button>
+    <p id="copyStatus" class="copystatus" role="status"></p>
+   </div>
+   <div class="humanline"><span class="humanicon">♡</span><p><strong>Human care comes first.</strong><br/>These are independent resources, not approved partner referrals or confirmed appointment slots.</p></div>
+  </aside>
+ </main>
+ <footer class="foot"><img src="/brand/zim-safe-minds-mark.webp" width="29" height="29" alt=""/><span>Zim Safe Minds / experimental AI lab</span><span class="footright">A safe space to talk. A path to real support.</span></footer>
+</div>
+
+<div class="overlay" id="consentModal" role="dialog" aria-modal="true" aria-labelledby="consentTitle" aria-describedby="consentText">
+ <section class="modal">
+  <div class="modaleyebrow">BEFORE WE TALK <span> / 01</span></div>
+  <div class="modalbrand"><img src="/brand/zim-safe-minds-mark.webp" width="84" height="84" alt=""/></div>
+  <h2 id="consentTitle">A little care,<br/><em>before we begin.</em></h2>
+  <p id="consentText">This experimental conversation uses OpenAI. What you type is sent to an external AI provider to generate a reply. The prototype doesn't create accounts or deliberately store conversations, but this is <strong>not a promise of confidentiality</strong> or a substitute for professional care.</p>
+  <ul><li>Do not include full names, exact addresses, health records, or other identifying details.</li><li>The AI may misunderstand your situation and cannot diagnose or treat mental-health conditions.</li><li><strong>No doctor, emergency responder, or monitoring team will be contacted automatically.</strong></li><li>For urgent danger, contact local emergency services or your nearest emergency department now.</li></ul>
+  <div class="consentbox"><label><input id="consentCheck" type="checkbox"/><span>I understand the limitations and choose to send my messages to the AI provider for this demonstration.</span></label></div>
+  <button id="beginBtn" type="button" class="begin" disabled>Begin conversation <span aria-hidden="true">→</span></button>
+  <a class="quietlink" href="https://zim-safe-minds.vercel.app/">Go back to the scripted public demo</a>
+ </section>
+</div>
+<script src="./lab.js" defer></script>
+</body>
+</html>

@@ -143,3 +143,12 @@ Per team feedback, the floating glowing **original hero illustration** is kept i
 The generated brand mark (two figures forming an embracing heart and subtle signal line) is used consistently in the header, demo cards and conversation interface. The matching full **Zim Safe Minds** wordmark is shown in the footer on a pale sea-glass inset so its dark-blue lettering remains legible in Afterglow. It is not stretched or recolored. The new symbol is used for the 32-pixel browser favicon and 180-pixel Apple touch icon.
 
 Source assets: `public/brand/zim-safe-minds-mark.webp`, `public/brand/zim-safe-minds-wordmark.webp`, `public/favicon-32.png`, and `public/apple-touch-icon.png`. Assets are built from the approved generated artwork, resized and optimized for web delivery; no third-party logo fonts or image hosts are required. The icon has a quiet glow animation **only in the main header**, disabled for visitors who prefer reduced motion. Asset URLs honor Vite's base path, keeping Vercel and GitHub Pages compatible.
+
+
+## Experimental AI Lab (isolated development branch)
+
+An optional, consent-first **live AI development prototype** lives only on the [`feat/consent-first-ai-lab`](https://github.com/AndrewHYN/Zim-Safe-Minds/tree/feat/consent-first-ai-lab) branch at `/ai-lab/index.html` on that branch's Vercel preview. **It has not been merged into `main` or the HackLab presentation.**
+
+The interface uses OpenAI GPT-5.4 Mini through a private server function once the owner securely configures `OPENAI_API_KEY` for **Preview**, with moderation, visible emergency guidance, and independent public support listings. No doctor calls, crisis monitoring, appointments, or automatic handoffs are implemented. **Until a Preview API key exists, live AI responses do not work.**
+
+See [`docs/AI_LAB.md`](docs/AI_LAB.md) for setup, safeguards, testing, limits and explicit launch gates. This is not suitable for real clinical use or unsupervised vulnerable-user testing.
