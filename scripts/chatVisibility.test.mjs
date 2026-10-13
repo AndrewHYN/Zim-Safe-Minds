@@ -14,15 +14,15 @@ test("the hero contains the only active chat, not a decorative mockup",()=>{
  assert.ok(hero<chat&&chat<band);
 });
 test("chat entry and starters require consent before sending",()=>{
- assert.match(app,/readOnly=\\{!accepted\\}/);
- assert.match(app,/function selectSuggestion\\(value:string\\)/);
- assert.match(app,/setPendingPrompt\\(value\\);setConsent\\(true\\)/);
- assert.match(app,/onClick=\\{beginAfterConsent\\}/);
+ assert.ok(app.includes("readOnly={!accepted}"));
+ assert.ok(app.includes("function selectSuggestion(value:string)"));
+ assert.ok(app.includes("setPendingPrompt(value);setConsent(true)"));
+ assert.ok(app.includes("onClick={beginAfterConsent}"));
  assert.match(app,/Not live AI or therapy/);
 });
 test("bright chat overrides the dark Afterglow background",()=>{
- assert.match(css,/\\.trio-app \\.trio-hero-chat\\{/);
+ assert.ok(css.includes(".trio-app .trio-hero-chat{"));
  assert.match(css,/--chat-panel:#f3fbf9/);
  assert.match(css,/border:2px solid #60cbbd/);
- assert.match(css,/\\.trio-app \\.trio-hero-chat \\.trio-chat-composer input\\{/);
+ assert.ok(css.includes(".trio-app .trio-hero-chat .trio-chat-composer input{"));
 });
