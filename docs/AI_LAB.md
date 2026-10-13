@@ -59,3 +59,18 @@ Main presentation stays on **\`main\`** until the team expressly agrees to move 
 ## AI connection incident, 13 Oct 2026
 
 An initial preview returned the static `SUPPORT_TEXT` on ordinary messages (`hey`, `i dont like people`). The string originated in the API catch-handler rather than OpenAI; technical upstream failures were incorrectly presented as counseling. The updated code never substitutes AI replies for technical errors and now returns safe diagnostic codes such as `OPENAI_CREDITS`, `OPENAI_AUTH_FAILED`, `OPENAI_MODEL_NOT_FOUND`, `OPENAI_REQUEST_INVALID`, `MODERATION_UNAVAILABLE`, `EMPTY_AI_OUTPUT`, or `AI_CONNECTION_FAILED`. The browser shows a distinct error card, preserves the attempted message in the input, and never claims a clinician was contacted. No API key is committed. A real end-to-end request still requires an authenticated Vercel Preview browser session; our connector's runtime-log tool currently responds 403. If the code is `OPENAI_CREDITS`, the project owner must review separate API billing; ChatGPT plans do not fund API usage.
+
+
+## Product-specific topic boundaries (13 October 2026)
+
+**Allowed:** wellbeing discussion, feelings, loneliness, stress, managing emotions, nonclinical awareness, and voluntary contact with independent mental-health support. A person who is worried *about* software development can discuss their feelings. **Not allowed:** coding, app development, debugging, homework solutions, recipes, general knowledge, writing unrelated essays, prompt-injection role changes, and other general assistant tasks.
+
+The application enforces these constraints on the **server** in layers:
+1. Immediate-danger language gets urgent human-help guidance before any task routing. This is only heuristic: not a dependable assessment of crisis.
+2. Cheap deterministic intent screening rejects clear app-development and unrelated requests **without making a billable model call**.
+3. For ambiguous requests, a small separate OpenAI model (\`gpt-4o-mini\`) classifies whether the **primary** intent is wellbeing or unrelated using a strict JSON schema. It receives at most five short conversational turns. If invalid or unavailable, the app does not generate a reply.
+4. The conversational model receives a tighter wellbeing-only system instruction and must output strict JSON with \`decision: support|redirect\`. The server—not the model—constructs the standard off-topic redirect.
+5. Output is screened for obvious code snippets, commands, and fenced code. The server refuses detected code rather than displaying it.
+6. Prompts and outputs are checked in automated adversarial regression tests. No unrelated tools (code execution, internet search, arbitrary plugins) are available to users.
+
+**Limitations:** These are defense-in-depth boundaries, not a 100% guarantee. Prompt injection, classifier error, missed crisis wording (especially in Shona/Ndebele), or incorrect model output remain possible. The API project must use tight usage budgets/alerts and distributed rate limiting before public release. The subject filter is NOT a clinician, triage algorithm or emergency-monitoring system. User testing involving vulnerable participants requires oversight. Structured response calls cost API tokens; tests using mocked responses do not establish real-world model behavior. Do NOT remove preview deployment protection.

@@ -47,13 +47,15 @@ test("successful mock model response is returned without claiming a doctor was c
  global.fetch=async (url,req)=>{
   called.push({url,body:JSON.parse(req.body)});
   if(url.endsWith("/moderations"))return {ok:true,json:async()=>({results:[{categories:{"self-harm":false,"self-harm/intent":false,"self-harm/instructions":false,"violence":false}}]})};
-  return {ok:true,json:async()=>({output:[{content:[{type:"output_text",text:"That sounds difficult. What feels most important right now?"}]}]})};
+  if(JSON.parse(req.body).text?.format?.name==="zsm_topic_scope")
+    return {ok:true,json:async()=>({output:[{content:[{type:"output_text",text:JSON.stringify({decision:"support"})}]}]})};
+  return {ok:true,json:async()=>({output:[{content:[{type:"output_text",text:JSON.stringify({decision:"support",reply:"That sounds difficult. What feels most important right now?"})}]}]})};
  };
  try{
    const {res,snapshot}=createResponse();
    await handler(reqFor("A synthetic story about exam stress","ai-unique"),res);
    assert.equal(snapshot().code,200);assert.equal(snapshot().body.mode,"live-ai");assert.equal(snapshot().body.contacted,false);
-   assert.equal(called[1].body.store,false);
-   assert.equal(called[1].body.model,"gpt-5.4-mini");
+   assert.equal(called.at(-1).body.store,false);
+   assert.equal(called.at(-1).body.model,"gpt-5.4-mini");
  }finally{global.fetch=original;if(key)process.env.OPENAI_API_KEY=key;else delete process.env.OPENAI_API_KEY;}
 });

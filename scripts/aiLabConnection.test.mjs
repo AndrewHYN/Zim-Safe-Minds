@@ -31,15 +31,17 @@ test("no credentials returns a transparent configuration error",async()=>{
 });
 test("a normal 'hey' produces the model's reply (not support fallback)",()=>withMockFetch(async url=>{
  if(url.endsWith("/moderations"))return response(200,{results:[{categories:{"self-harm":false}}]});
- return response(200,{output:[{content:[{type:"output_text",text:"Hey! What's up?"}]}]});
+ return response(200,{output:[{content:[{type:"output_text",text:JSON.stringify({decision:"support",reply:"Hey! What's up?"})}]}]});
 },async()=>{
  const{res,snapshot}=replyMock();await handler(reqFor("hey"),res);
  assert.equal(snapshot().code,200);assert.equal(snapshot().body.reply,"Hey! What's up?");
  assert.equal(snapshot().body.risk,"none");
 }));
-test("'i dont like people' does not trigger an emergency message",()=>withMockFetch(async url=>{
+test("'i dont like people' does not trigger an emergency message",()=>withMockFetch(async (url,req)=>{
  if(url.endsWith("/moderations"))return response(200,{results:[{categories:{"self-harm":false}}]});
- return response(200,{output:[{content:[{type:"output_text",text:"People can be exhausting sometimes. What happened?"}]}]});
+ const name=JSON.parse(req.body).text?.format?.name;
+ if(name==="zsm_topic_scope")return response(200,{output:[{content:[{type:"output_text",text:JSON.stringify({decision:"support"})}]}]});
+ return response(200,{output:[{content:[{type:"output_text",text:JSON.stringify({decision:"support",reply:"People can be exhausting sometimes. What happened?"})}]}]});
 },async()=>{
  const{res,snapshot}=replyMock();await handler(reqFor("i dont like people"),res);
  assert.equal(snapshot().code,200);assert.equal(snapshot().body.risk,"none");

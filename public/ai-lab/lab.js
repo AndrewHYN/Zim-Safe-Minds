@@ -52,8 +52,8 @@ async function sendMessage(message){
    crisis.classList.remove("hidden");
    crisis.querySelector("strong").textContent=data.risk==="urgent"?"Let's focus on immediate safety":"You deserve real support, too";
   }
-  model.textContent=data.mode==="live-ai"?"Live AI response · Not therapy":"Safety guidance · Not emergency monitoring";
-  status.textContent="AI response received · No doctor was contacted.";
+  model.textContent=data.mode==="live-ai"?"Live AI response · Not therapy":data.mode==="scope"?"Wellbeing-only support · No technical advice":"Safety guidance · Not emergency monitoring";
+  status.textContent=data.mode==="scope"?"That request is outside this wellbeing guide.":"AI response received · No doctor was contacted.";
  }catch(_){
   if(history.at(-1)?.role==="user")history.pop();input.value=text;
   model.textContent="AI unavailable · No response generated";status.textContent="Network issue · No AI response";
