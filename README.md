@@ -207,3 +207,17 @@ This project is a **founder-led prototype**, intended for transparent developmen
 Our interface has been redesigned in a distinctive medical-tech style inspired by low-glare Afterglow themes, without copying another product’s assets or code. A **Daylight** theme uses soft clinical whites, teal, sea blue and sage; **Afterglow** mode uses deep medical navy, sea glass and mint. Switch between them in the header. The redesigned landing, chat and care-navigation journeys use consistent accessible controls, stronger typography, subtle luminous detailing, mobile layouts and a visible immediate-help action. No purple AI gradients, fictional therapist profiles or fake social proof.
 
 **AI remains a major product pillar**. The present chat remains a scripted demonstration, clearly marked as such. Read the [design tokens, safety boundaries and AI roadmap](docs/DESIGN_SYSTEM.md).
+
+## HackLab 2026 application — submission-ready milestone (13 October)
+
+- [Official-form copy-and-paste pack, including primary root cause, 187-word summary, 405-word innovation description, USD 5,000 budget, 12-month pilot and SRHR/gender/disability note](docs/READY_TO_PASTE_APPLICATION_2026.md)
+- [Judge-readiness evidence checklist with the official 100-point rubric](docs/JUDGING_EVIDENCE_CHECKLIST_2026.md)
+- [Seven-day ethical validation sprint and professional outreach note](docs/SEVEN_DAY_EVIDENCE_SPRINT_2026.md)
+
+### New: independent first-contact bridge
+The care navigator now creates an **optional editable first-contact draft** from allowlisted format/price/language preferences. Nothing is transmitted by Zim Safe Minds, and no chat transcript or sensitive health information is copied into the note. Users choose whether to share it with an independent service. This is **not** a live clinician referral. New automated tests exercise the no-transcript data boundary.
+
+### Grant demo readiness
+The site uses the custom **Medical Afterglow** theme. The shipped web build demonstrates a transparent scripted reflection interface, grounding, choice-based care navigation, a first-contact note, and access to an independent public service without claiming partnership.
+
+The HackLab deadline is **20 October 2026, 23:59 CAT**. Applying requires the actual eligible person's/team's details and manual review of the official Google Form. Our prototype and drafts are not proof of interview outcomes, approved partners, real AI therapy or a seed grant award.
