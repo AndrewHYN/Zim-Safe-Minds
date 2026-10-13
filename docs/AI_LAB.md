@@ -54,3 +54,8 @@ npm run build
 Includes safety phrase, moderation fail-closed, input validation and directory provenance checks. Additional production gates: clinician-reviewed crisis scenarios; Shona/Ndebele safety phrasing assessment; red-team prompt injection and self-harm tests; mobile accessibility; timeouts; privacy review; sustained rate-limit protection; partner protocol; signed-off incident handling.
 
 Main presentation stays on **\`main\`** until the team expressly agrees to move beyond the scripted prototype.
+
+
+## AI connection incident, 13 Oct 2026
+
+An initial preview returned the static `SUPPORT_TEXT` on ordinary messages (`hey`, `i dont like people`). The string originated in the API catch-handler rather than OpenAI; technical upstream failures were incorrectly presented as counseling. The updated code never substitutes AI replies for technical errors and now returns safe diagnostic codes such as `OPENAI_CREDITS`, `OPENAI_AUTH_FAILED`, `OPENAI_MODEL_NOT_FOUND`, `OPENAI_REQUEST_INVALID`, `MODERATION_UNAVAILABLE`, `EMPTY_AI_OUTPUT`, or `AI_CONNECTION_FAILED`. The browser shows a distinct error card, preserves the attempted message in the input, and never claims a clinician was contacted. No API key is committed. A real end-to-end request still requires an authenticated Vercel Preview browser session; our connector's runtime-log tool currently responds 403. If the code is `OPENAI_CREDITS`, the project owner must review separate API billing; ChatGPT plans do not fund API usage.
