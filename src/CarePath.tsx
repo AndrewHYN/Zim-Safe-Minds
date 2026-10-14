@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { Locale } from "./copy";
 import { careSummary, careCopy, firstContactNote } from "./lib/careOptions.mjs";
 
 type Mode = "online" | "in-person" | "either";
@@ -17,11 +18,11 @@ const budgets:{value:Budget;title:string;subtitle:string}[]=[
   {value:"either",title:"Show available choices",subtitle:"I want to understand my options first."}
 ];
 const languages:Language[]=["English","Shona","Ndebele"];
-export default function CarePath(){
+export default function CarePath({locale}:{locale:Locale}){
   const [stage,setStage]=useState<Stage>(0);
   const [mode,setMode]=useState<Mode>("either");
   const [budget,setBudget]=useState<Budget>("free");
-  const [language,setLanguage]=useState<Language>("English");
+  const [language,setLanguage]=useState<Language>(locale==="sn"?"Shona":locale==="nd"?"Ndebele":"English");
   const [copied,setCopied]=useState(false);
   const [contactCopied,setContactCopied]=useState(false);
   const [copyError,setCopyError]=useState(false);

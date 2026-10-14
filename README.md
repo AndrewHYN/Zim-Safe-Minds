@@ -23,6 +23,12 @@ Our proposed product combines:
 
 The HackLab focus is **one category only**: Category 1. Our primary root cause is **social, cultural and behavioural barriers to seeking health services**, especially stigma.
 
+## Languages and optional account entry
+
+A first-visit **Afterglow welcome screen** lets visitors select **Shona (default), Ndebele or English**, saved as a browser preference. The Talk experience, navigation and key safety disclosures have draft translations. Learn and Connect content and scripted chat responses are **partially English** until language and clinical safety review. A language selector is always available in the header.
+
+Visitors may always **continue as guests**. The redesigned **Create account / Sign in** panel is an optional, privacy-conscious interface. It does not collect credentials until a **dedicated Zim Safe Minds Supabase Auth project** has been configured: the project currently has no connected backend. Never reuse the BidBlitz database. Follow the [configuration, safeguards and QA guide](docs/LANGUAGE_AND_ACCOUNTS.md) before enabling real accounts.
+
 ## See the product before the meeting
 
 **Open:** https://andrewhyn.github.io/Zim-Safe-Minds/

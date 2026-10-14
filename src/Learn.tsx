@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
+import { t, type Locale } from "./copy";
 import { posts, categories, filterPosts } from "./lib/learnContent.mjs";
 type Post = (typeof posts)[number];
-type LearnProps = { onTalk:()=>void; onConnect:()=>void };
-export default function Learn({onTalk,onConnect}:LearnProps){
+type LearnProps = { onTalk:()=>void; onConnect:()=>void; locale:Locale };
+export default function Learn({onTalk,onConnect,locale}:LearnProps){
  const [category,setCategory]=useState("All");
  const [query,setQuery]=useState("");
  const [active,setActive]=useState<Post|null>(null);
@@ -19,8 +20,8 @@ export default function Learn({onTalk,onConnect}:LearnProps){
  return <section className="learn-page">
   <div className="layout learn-intro">
    <div><div className="section-label"><span className="section-dot"/> EXPLORE / MENTAL WELLBEING</div>
-    <h1>Words that <em>make room</em> for better days.</h1>
-    <p>No doomscrolling. No diagnoses. Just approachable mental-health awareness, original reflections, and trustworthy places to learn more.</p>
+    <h1>{locale==="sn"?"Mashoko anopa":locale==="nd"?"Amazwi asinika":"Words that"} <em>{locale==="sn"?"tariro":locale==="nd"?"ithemba":"make room"}</em> {locale==="sn"?"kumangwana.":locale==="nd"?"lokusa.":"for better days."}</h1>
+    <p>{locale==="sn"?"Ruzivo rwuri nyore nezveutano hwepfungwa, rwunobva kune dzimwe nzvimbo dzakavimbika. Zvimwe zvinyorwa zvichiri muChirungu.":locale==="nd"?"Ulwazi olulula mayelana lempilakahle yengqondo, oluvela emithonjeni ethembekileyo. Ezinye izihloko ziseseNgisi.":"No doomscrolling. No diagnoses. Just approachable mental-health awareness, original reflections, and trustworthy places to learn more."}</p>
    </div>
    <div className="learn-stamp"><span className="stamp-mark">✳</span><strong>YOUR SPACE TO GROW</strong><small>Carefully written awareness content · Preview</small></div>
   </div>
@@ -29,7 +30,7 @@ export default function Learn({onTalk,onConnect}:LearnProps){
     <div className="learn-feature-art"><span>WELLBEING / 001</span><div className="feature-petal">✳</div><strong>A little kindness goes a long way.</strong><small>ONE STEP AT A TIME</small></div>
     <div className="learn-feature-copy"><span className="section-label">FEATURED STORY · 3 MIN READ</span><h2>{featured.title}</h2><p>{featured.excerpt}</p><button className="button button-dark" onClick={()=>setActive(featured)}>Read the story <span aria-hidden="true">↗</span></button></div>
    </div>
-   <div className="learn-toolbar"><div><span className="section-label">THE LIBRARY</span><h2>Take what you need today.</h2></div><label className="learn-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search awareness articles</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search the library…"/></label></div>
+   <div className="learn-toolbar"><div><span className="section-label">THE LIBRARY</span><h2>{t(locale,"learnTitle")}</h2></div><label className="learn-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search awareness articles</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search the library…"/></label></div>
    <div className="learn-filters" aria-label="Filter topics">{categories.map(c=><button key={c} aria-pressed={category===c} className={category===c?"filter-active":""} onClick={()=>setCategory(c)}>{c}</button>)}</div>
    <div className="learn-grid">
     {results.map(post=><article className="learn-card" key={post.id}>

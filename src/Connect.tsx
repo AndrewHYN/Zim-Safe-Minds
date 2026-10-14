@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { type Locale } from "./copy";
 import CarePath from "./CarePath";
 import {appointmentChoices,appointmentMessage} from "./lib/appointmentPreview.mjs";
-export default function Connect(){
+export default function Connect({locale}:{locale:Locale}){
  const choices=appointmentChoices();
  const [service,setService]=useState("intro");
  const [format,setFormat]=useState("either");
@@ -14,7 +15,7 @@ export default function Connect(){
   catch{setCopied(false);setError(true);}
  }
  return <div className="connect-page">
-   <div className="layout connect-header"><div><span className="section-label"><span className="section-dot"/> CONNECT / HUMAN SUPPORT</span><h1>Real people. <em>Real support.</em><br/>Your choice.</h1><p>Explore your options and prepare to make that first contact. You never have to share a chat transcript to look for help.</p>
+   <div className="layout connect-header"><div><span className="section-label"><span className="section-dot"/> CONNECT / HUMAN SUPPORT</span><h1>{locale==="sn"?"Vanhu chaivo.":locale==="nd"?"Abantu boqobo.":"Real people."} <em>{locale==="sn"?"Rubatsiro rwechokwadi.":locale==="nd"?"Usizo lweqiniso.":"Real support."}</em><br/>{locale==="sn"?"Sarudzo yako.":locale==="nd"?"Ukukhetha kwakho.":"Your choice."}</h1><p>{locale==="sn"?"Ongorora nzira dzako, uye gadzirira kutaura nemunhu. Hapana chikonzero chekugovera hurukuro yako.":locale==="nd"?"Hlola izindlela ezikhona, ulungiselele ukukhuluma lomuntu. Akudingeki ukuthi wabelane ngengxoxo yakho.":"Explore your options and prepare to make that first contact. You never have to share a chat transcript to look for help."}</p>
     <div className="connect-trust"><span>✓ User-led choice</span><span>✓ No hidden transcript sharing</span><span>✓ Independent sources</span></div>
    </div><div className="connect-header-visual" aria-hidden="true"><div className="connect-orbit"><div className="connect-pulse">♡</div></div><span>FROM A FIRST THOUGHT</span><strong>to a real conversation.</strong></div></div>
    <div className="layout">
@@ -39,6 +40,6 @@ export default function Connect(){
       </div>
     </section>
    </div>
-   <CarePath/>
+   <CarePath locale={locale}/>
  </div>;
 }
