@@ -673,3 +673,13 @@
  .trio-app .brand-wordmark-glass{animation:none!important;transition:none!important}
  .trio-app .brand-signature:hover .brand-wordmark-glass{transform:none}
 }
+
+/* Consent-first AI Lab entry is visible from Talk without changing the original hero/chat. */
+.trio-ai-bridge{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:radial-gradient(ellipse at 84% 0%,var(--light),transparent 54%),var(--surface)}
+.trio-ai-bridge-inner{display:flex;align-items:center;gap:22px;padding-top:31px;padding-bottom:31px}
+.trio-ai-bridge-icon{width:58px;height:58px;flex:none;display:grid;place-items:center;border-radius:20px;background:var(--light);border:1px solid var(--line);color:var(--accent);font-size:35px;box-shadow:0 9px 28px #041a2422}
+.trio-ai-bridge-content{flex:1;min-width:0}.trio-ai-bridge-content h2{font-size:clamp(18px,2vw,25px);letter-spacing:-.045em;margin:8px 0}.trio-ai-bridge-content p{font-size:12px;line-height:1.7;color:var(--muted);max-width:670px;margin:0}.trio-ai-bridge-content strong{color:var(--ink)}
+.trio-ai-bridge-link{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:17px;min-height:46px;border:1px solid var(--accent);border-radius:12px;padding:12px 17px;color:var(--deep);background:var(--accent);font-size:12px;font-weight:800;text-decoration:none;box-shadow:0 6px 25px #5ee2bd25;transition:transform .2s,box-shadow .2s}
+.trio-ai-bridge-link:hover{transform:translateY(-2px);box-shadow:0 7px 35px #5ee2bd48}
+@media(max-width:730px){.trio-ai-bridge-inner{flex-wrap:wrap;padding-top:25px;padding-bottom:25px;gap:13px}.trio-ai-bridge-icon{width:45px;height:45px;font-size:28px}.trio-ai-bridge-content{flex-basis:calc(100% - 58px)}.trio-ai-bridge-link{width:100%}}
+@media(prefers-reduced-motion:reduce){.trio-ai-bridge-link{transition:none}.trio-ai-bridge-link:hover{transform:none}}

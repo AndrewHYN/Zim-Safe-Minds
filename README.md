@@ -29,6 +29,14 @@ A first-visit **Afterglow welcome screen** lets visitors select **Shona (default
 
 Visitors may always **continue as guests**. The redesigned **Create account / Sign in** panel is an optional, privacy-conscious interface. It does not collect credentials until a **dedicated Zim Safe Minds Supabase Auth project** has been configured: the project currently has no connected backend. Never reuse the BidBlitz database. Follow the [configuration, safeguards and QA guide](docs/LANGUAGE_AND_ACCOUNTS.md) before enabling real accounts.
 
+## AI conversation experiment — merged, not publicly activated
+
+A separate consent-first **[AI Lab](https://zim-safe-minds.vercel.app/ai-lab/index.html)** is linked from the **Talk** page. It was merged from the previously unfinished `feat/consent-first-ai-lab` branch; the existing scripted conversation, language selection and account entry remain intact.
+
+The AI Lab includes opt-in consent, external OpenAI processing disclosed before chat, server-only API credentials, wellbeing-only scope controls, conservative safety signals, transparent provider links and an experimental English / Shona / Ndebele language preference. **It is not therapy, clinical advice, a crisis service or a monitored referral system.**
+
+**Production live AI is disabled by default** while safeguarding, privacy and rate-limit work remains. The lab may return a plain unavailable message rather than inventing a reply. See [AI Lab implementation and release gates](docs/AI_LAB.md). No chat transcripts are added to user accounts.
+
 ## See the product before the meeting
 
 **Open:** https://andrewhyn.github.io/Zim-Safe-Minds/

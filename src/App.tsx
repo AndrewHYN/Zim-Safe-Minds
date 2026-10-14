@@ -147,6 +147,17 @@ export default function App(){
       </section>
       </div>
      </section>
+     <section className="trio-ai-bridge" aria-labelledby="zsm-ai-bridge-title">
+      <div className="layout trio-ai-bridge-inner">
+       <div className="trio-ai-bridge-icon" aria-hidden="true">✳</div>
+       <div className="trio-ai-bridge-content">
+        <span className="section-label">EXPERIMENTAL · OPT-IN AI</span>
+        <h2 id="zsm-ai-bridge-title">Explore the unfinished AI conversation lab.</h2>
+        <p>An optional, separate experiment for wellbeing reflection. Your messages are sent to an external AI provider <strong>only after explicit consent</strong>. No therapist monitors the chat, and public AI access is not yet activated.</p>
+       </div>
+       <a className="trio-ai-bridge-link" href={`https://zim-safe-minds.vercel.app/ai-lab/index.html?lang=${uiLocale}`}>View AI Lab <span aria-hidden="true">↗</span></a>
+      </div>
+     </section>
      <div className="trio-band"><div className="layout"><span>AN OUTLET TO TALK</span><span>✳</span><span>A LIBRARY TO LEARN</span><span>✳</span><span>A PATH TO CONNECT</span></div></div>
      <div className="layout trio-below-chat">
       <div className="trio-support-heading"><span className="section-label">{translate("supportLabel")}</span><h2>{translate("supportTitle")}</h2><p>{translate("supportText")}</p></div>
