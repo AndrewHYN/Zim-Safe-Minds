@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { tr, type Language } from "./i18n";
 import { t, type Locale } from "./copy";
 import { posts, categories, filterPosts } from "./lib/learnContent.mjs";
 type Post = (typeof posts)[number];
@@ -23,39 +24,40 @@ export default function Learn({onTalk,onConnect,locale}:LearnProps){
     <h1>{locale==="sn"?"Mashoko anopa":locale==="nd"?"Amazwi asinika":"Words that"} <em>{locale==="sn"?"tariro":locale==="nd"?"ithemba":"make room"}</em> {locale==="sn"?"kumangwana.":locale==="nd"?"lokusa.":"for better days."}</h1>
     <p>{locale==="sn"?"Ruzivo rwuri nyore nezveutano hwepfungwa, rwunobva kune dzimwe nzvimbo dzakavimbika. Zvimwe zvinyorwa zvichiri muChirungu.":locale==="nd"?"Ulwazi olulula mayelana lempilakahle yengqondo, oluvela emithonjeni ethembekileyo. Ezinye izihloko ziseseNgisi.":"No doomscrolling. No diagnoses. Just approachable mental-health awareness, original reflections, and trustworthy places to learn more."}</p>
    </div>
-   <div className="learn-stamp"><span className="stamp-mark">✳</span><strong>YOUR SPACE TO GROW</strong><small>Carefully written awareness content · Preview</small></div>
+   <div className="learn-stamp"><span className="stamp-mark">✳</span><strong>{t("YOUR SPACE TO GROW")}</strong><small>{t("Carefully written awareness content · Preview")}</small></div>
   </div>
   <div className="layout">
    <div className="learn-feature">
-    <div className="learn-feature-art"><span>WELLBEING / 001</span><div className="feature-petal">✳</div><strong>A little kindness goes a long way.</strong><small>ONE STEP AT A TIME</small></div>
-    <div className="learn-feature-copy"><span className="section-label">FEATURED STORY · 3 MIN READ</span><h2>{featured.title}</h2><p>{featured.excerpt}</p><button className="button button-dark" onClick={()=>setActive(featured)}>Read the story <span aria-hidden="true">↗</span></button></div>
+    <div className="learn-feature-art"><span>{t("WELLBEING / 001")}</span><div className="feature-petal">✳</div><strong>{t("A little kindness goes a long way.")}</strong><small>{t("ONE STEP AT A TIME")}</small></div>
+    <div className="learn-feature-copy"><span className="section-label">{t("FEATURED STORY · 3 MIN READ")}</span><h2>{t(featured.title)}</h2><p>{t(featured.excerpt)}</p><button className="button button-dark" onClick={()=>setActive(featured)}>Read the story <span aria-hidden="true">↗</span></button></div>
    </div>
-   <div className="learn-toolbar"><div><span className="section-label">THE LIBRARY</span><h2>{t(locale,"learnTitle")}</h2></div><label className="learn-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search awareness articles</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search the library…"/></label></div>
-   <div className="learn-filters" aria-label="Filter topics">{categories.map(c=><button key={c} aria-pressed={category===c} className={category===c?"filter-active":""} onClick={()=>setCategory(c)}>{c}</button>)}</div>
+   <div className="learn-toolbar"><div><span className="section-label">{t("THE LIBRARY")}</span><h2>{t(locale,"learnTitle")}</h2></div><label className="learn-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search awareness articles</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t("Search the library…")}/></label></div>
+   <div className="learn-filters" aria-label={t("Filter topics")}>{categories.map(c=><button key={c} aria-pressed={category===c} className={category===c?"filter-active":""} onClick={()=>setCategory(c)}>{t(c)}</button>)}</div>
    <div className="learn-grid">
     {results.map(post=><article className="learn-card" key={post.id}>
-      <button className={"learn-poster poster-"+post.theme} onClick={()=>setActive(post)} aria-label={"Read "+post.title}>
+      <button className={"learn-poster poster-"+post.theme} onClick={()=>setActive(post)} aria-label={t("Read more")+" "+t(post.title)}>
        <span className="poster-top"><span>SAFE MINDS / EDITION 01</span><span>↗</span></span>
        <span className="poster-symbol" aria-hidden="true">{post.symbol}</span>
-       <strong>{post.poster}</strong><small>MENTAL WELLBEING MATTERS</small>
+       <strong>{t(post.poster)}</strong><small>{t("MENTAL WELLBEING MATTERS")}</small>
       </button>
-      <div className="learn-card-body"><span className="learn-meta">{post.category.toUpperCase()} <span>·</span> {post.read.toUpperCase()}</span>
-       <h3>{post.title}</h3><p>{post.excerpt}</p>
-       <div className="learn-card-actions"><button className="text-link" onClick={()=>setActive(post)}>Read more ↗</button><button className={"save-post "+(saved.includes(post.id)?"is-saved":"")} onClick={()=>toggle(post.id)} aria-pressed={saved.includes(post.id)} aria-label={saved.includes(post.id)?"Remove saved article":"Save article for this visit"}>{saved.includes(post.id)?"♥ Saved":"♡ Save"}</button></div>
+      <div className="learn-card-body"><span className="learn-meta">{t(post.category).toUpperCase()} <span>·</span> {post.read.toUpperCase()}</span>
+       <h3>{t(post.title)}</h3><p>{t(post.excerpt)}</p>
+       <div className="learn-card-actions"><button className="text-link" onClick={()=>setActive(post)}>{t("Read more ↗")}</button><button className={"save-post "+(saved.includes(post.id)?"is-saved":"")} onClick={()=>toggle(post.id)} aria-pressed={saved.includes(post.id)} aria-label={saved.includes(post.id)?"Remove saved article":"Save article for this visit"}>{saved.includes(post.id)?"♥ "+t("Saved"):"♡ "+t("Save")}</button></div>
       </div>
      </article>)}
    </div>
-   {results.length===0&&<div className="learn-empty"><h3>No matches just yet.</h3><p>Try a different topic or clear your search.</p><button className="button button-outline" onClick={()=>{setCategory("All");setQuery("");}}>Show everything</button></div>}
-   <div className="learn-more-panel"><div><span className="section-label">WHEN READING ISN'T ENOUGH</span><h2>You can take the next step.</h2><p>Reach out for a conversation or explore available care information when you're ready.</p></div><div><button className="button button-dark" onClick={onTalk}>Try guided reflection ↗</button><button className="button button-outline" onClick={onConnect}>Find real support ↗</button></div></div>
+   {results.length===0&&<div className="learn-empty"><h3>{t("No matches just yet.")}</h3><p>{t("Try a different topic or clear your search.")}</p><button className="button button-outline" onClick={()=>{setCategory("All");setQuery("");}}>{t("Show everything")}</button></div>}
+   <div className="learn-more-panel"><div><span className="section-label">{t("WHEN READING ISN'T ENOUGH")}</span><h2>{t("You can take the next step.")}</h2><p>{t("Reach out for a conversation or explore available care information when you're ready.")}</p></div><div><button className="button button-dark" onClick={onTalk}>{t("Try guided reflection ↗")}</button><button className="button button-outline" onClick={onConnect}>{t("Find real support ↗")}</button></div></div>
+   {language!=="en"&&<p className="zsm-translation-note" role="note">{t("Some learning articles and detailed guidance are still in English while Shona and Ndebele wording is reviewed.")}</p>}
    <p className="learn-editorial-note">Editorial awareness content, not personal medical advice or a live news feed. Articles link to independent sources; no clinician review or partnership is claimed. Saved items last only while this page is open.</p>
   </div>
   {active&&<div className="modal-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setActive(null);}}>
     <article className="modal-dialog learn-article-modal" role="dialog" aria-modal="true" aria-labelledby="article-title">
-      <button className="article-close" autoFocus onClick={()=>setActive(null)} aria-label="Close article">×</button>
-      <span className="section-label">{active.eyebrow} · {active.read}</span><h2 id="article-title">{active.title}</h2>
-      <p className="article-deck">{active.excerpt}</p>{active.paragraphs.map((p,i)=><p key={i}>{p}</p>)}
-      <a className="article-source" href={active.sourceUrl} target="_blank" rel="noopener noreferrer">Explore the source: {active.sourceLabel} ↗</a>
-      <div className="article-footer"><button className="button button-outline" onClick={()=>setActive(null)}>Back to Learn</button><button className="button button-dark" onClick={()=>{setActive(null);onConnect();}}>Explore support ↗</button></div>
+      <button className="article-close" autoFocus onClick={()=>setActive(null)} aria-label={t("Close")}>×</button>
+      <span className="section-label">{active.eyebrow} · {active.read}</span><h2 id="article-title">{t(active.title)}</h2>
+      <p className="article-deck">{t(active.excerpt)}</p>{language!=="en"&&<p className="zsm-translation-note">{t("Some learning articles and detailed guidance are still in English while Shona and Ndebele wording is reviewed.")}</p>}{active.paragraphs.map((p,i)=><p key={i}>{p}</p>)}
+      <a className="article-source" href={active.sourceUrl} target="_blank" rel="noopener noreferrer">{t("Explore the source: ")}{active.sourceLabel} ↗</a>
+      <div className="article-footer"><button className="button button-outline" onClick={()=>setActive(null)}>{t("Back to Learn")}</button><button className="button button-dark" onClick={()=>{setActive(null);onConnect();}}>{t("Explore support ↗")}</button></div>
     </article>
    </div>}
  </section>;
