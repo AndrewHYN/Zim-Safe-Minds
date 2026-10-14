@@ -1,4 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import type { User } from "@supabase/supabase-js";
+import EntryExperience from "./EntryExperience";
+import { auth } from "./authClient";
+import { readLanguage, saveLanguage, tr, type Language } from "./i18n";
 import type { FormEvent } from "react";
 import Learn from "./Learn";
 import Connect from "./Connect";
@@ -25,7 +29,50 @@ function Brand({small=false}:{small?:boolean}){
  </span>;
 }
 export default function App(){
- const [tab,setTab]=useState<Tab>("talk");
+
+ const [language,setLanguage]=useState<Language|null>(()=>readLanguage());
+ const [stage,setStage]=useState<"language"|"auth"|"app">(()=>{
+  if(!readLanguage())return "language";
+  try{return sessionStorage.getItem("zsm.guest.v1")==="1"?"app":"auth";}catch{return "auth";}
+ });
+ const [user,setUser]=useState<User|null>(null);
+ const lang=language??"en";
+ const t=(text:string)=>tr(lang,text);
+ useEffect(()=>{
+   saveLanguage(lang);
+   document.title="Zim Safe Minds | "+t("Talk")+" · "+t("Learn")+" · "+t("Connect");
+ },[lang]);
+ useEffect(()=>{
+  if(!auth)return;
+  let mounted=true;
+  auth.auth.getSession().then(({data})=>{
+   if(!mounted)return;
+   if(data.session?.user){setUser(data.session.user);setStage("app");}
+  }).catch(()=>{/* Guest access remains available on auth errors */});
+  const {data:{subscription}}=auth.auth.onAuthStateChange((event,session)=>{
+   if(!mounted)return;
+   setUser(session?.user??null);
+   if(session){setStage("app");try{sessionStorage.removeItem("zsm.guest.v1");}catch{/* ok */}}
+   else if(event==="SIGNED_OUT"){setStage("auth");}
+  });
+  return()=>{mounted=false;subscription.unsubscribe();};
+ },[]);
+ function selectStartLanguage(next:Language|null){
+  setLanguage(next);
+  if(next){saveLanguage(next);setStage("auth");}
+  else{try{localStorage.removeItem("zsm.language.v1");}catch{/* ok */}setStage("language");}
+ }
+ function continueAsGuest(){
+  try{sessionStorage.setItem("zsm.guest.v1","1");}catch{/* ok */}
+  setStage("app");
+ }
+ async function signOut(){
+  try{await auth?.auth.signOut();}catch{/* Still return to welcome */}
+  setUser(null);
+  try{sessionStorage.removeItem("zsm.guest.v1");}catch{/* ok */}
+  setStage("auth");
+ }
+
  const [theme,setTheme]=useState<Theme>("afterglow");
  const [mobile,setMobile]=useState(false);
  const [consent,setConsent]=useState(false);
@@ -37,7 +84,7 @@ export default function App(){
  const [pendingPrompt,setPendingPrompt]=useState<string|null>(null);
  const chatLogRef=useRef<HTMLDivElement>(null);
  useEffect(()=>{chatLogRef.current?.scrollTo({top:chatLogRef.current.scrollHeight,behavior:"smooth"});},[history]);
- useEffect(()=>{document.title="Zim Safe Minds | Talk · Learn · Connect";},[]);
+
  function navigate(next:Tab){setTab(next);setMobile(false);window.scrollTo({top:0,behavior:"smooth"});}
  function talk(){
    navigate("talk");
@@ -63,55 +110,59 @@ export default function App(){
  }
  function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();if(accepted)send(message);}
  const hasUrgent=history.some(m=>m.urgent);
+ if(stage!=="app")return <EntryExperience language={stage==="language"?null:language} onSelectLanguage={selectStartLanguage} onGuest={continueAsGuest} onAuthenticated={()=>setStage("app")}/>;
  return <div className={"app-shell palette-"+theme+" trio-app"}>
-  <div className="service-ribbon"><div className="layout ribbon-content"><span><span className="live-dot"/> ZIMBABWE-BUILT · YOUTH MENTAL WELLBEING PROTOTYPE</span><button onClick={()=>setEmergency(true)}>Need urgent help? ↗</button></div></div>
+  <div className="service-ribbon"><div className="layout ribbon-content"><span><span className="live-dot"/> ZIMBABWE-BUILT · YOUTH MENTAL WELLBEING PROTOTYPE</span><button onClick={()=>setEmergency(true)}>{t("Need urgent help?")} ↗</button></div></div>
   <header className="site-header trio-header"><div className="layout nav-shell trio-navshell">
    <button className="brand" onClick={()=>navigate("talk")} aria-label="Zim Safe Minds — Talk"><Brand/><span>Zim<span className="brand-light">Safe</span>Minds<span className="brand-period">.</span></span></button>
    <nav className={"site-nav trio-nav "+(mobile?"nav-open":"")} aria-label="Three main sections">
-    <button className={tab==="talk"?"selected":""} aria-current={tab==="talk"?"page":undefined} onClick={()=>navigate("talk")}><span>01</span> Talk</button>
-    <button className={tab==="learn"?"selected":""} aria-current={tab==="learn"?"page":undefined} onClick={()=>navigate("learn")}><span>02</span> Learn</button>
-    <button className={tab==="connect"?"selected":""} aria-current={tab==="connect"?"page":undefined} onClick={()=>navigate("connect")}><span>03</span> Connect</button>
+    <button className={tab==="talk"?"selected":""} aria-current={tab==="talk"?"page":undefined} onClick={()=>navigate("talk")}><span>01</span> {t("Talk")}</button>
+    <button className={tab==="learn"?"selected":""} aria-current={tab==="learn"?"page":undefined} onClick={()=>navigate("learn")}><span>02</span> {t("Learn")}</button>
+    <button className={tab==="connect"?"selected":""} aria-current={tab==="connect"?"page":undefined} onClick={()=>navigate("connect")}><span>03</span> {t("Connect")}</button>
    </nav>
-   <div className="nav-actions"><button className="palette-switch" onClick={()=>setTheme(t=>t==="daylight"?"afterglow":"daylight")} aria-label={theme==="daylight"?"Switch to Afterglow night theme":"Switch to Daylight theme"} title="Switch calming color theme"><span aria-hidden="true">{theme==="daylight"?"☾":"☀"}</span><span>{theme==="daylight"?"Afterglow":"Daylight"}</span></button><button className="menu-control" onClick={()=>setMobile(v=>!v)} aria-label="Toggle main navigation" aria-expanded={mobile}>☰</button></div>
+   <div className="nav-actions">
+    <label className="zsm-site-language"><span aria-hidden="true">◎</span><span className="sr-only">{t("Language")}</span><select aria-label={t("Language")} value={lang} onChange={e=>{const next=e.target.value as Language;setLanguage(next);saveLanguage(next);}}><option value="sn">Shona</option><option value="nd">Ndebele</option><option value="en">English</option></select></label>
+    {user?<div className="zsm-account-pop"><span>{String(user.user_metadata?.display_name??user.email?.split("@")[0]??"Member").slice(0,20)}</span><button className="zsm-account-button" type="button" onClick={signOut}>{t("Sign out")}</button></div>:<button className="zsm-account-button" type="button" onClick={()=>setStage("auth")}>{t("Sign in")}</button>}
+    <button className="palette-switch" onClick={()=>setTheme(t=>t==="daylight"?"afterglow":"daylight")} aria-label={theme==="daylight"?"Switch to Afterglow night theme":"Switch to Daylight theme"} title="Switch calming color theme"><span aria-hidden="true">{theme==="daylight"?"☾":"☀"}</span><span>{theme==="daylight"?"Afterglow":"Daylight"}</span></button><button className="menu-control" onClick={()=>setMobile(v=>!v)} aria-label="Toggle main navigation" aria-expanded={mobile}>☰</button></div>
   </div></header>
   <main>
    {tab==="talk"&&<section className="trio-talk">
      <div className="trio-hero"><div className="layout trio-hero-grid">
-      <div className="trio-hero-content"><span className="section-label"><span className="section-dot"/> A SAFER FIRST STEP STARTS HERE</span>
-       <h1>It's okay to <em>not feel okay.</em></h1>
-       <p>Some conversations are hard to begin. We’re making it easier to express what’s on your mind, discover mental-health resources, and reach real people when you choose.</p>
-       <div className="trio-hero-buttons"><button className="button button-dark button-large" onClick={talk}>Try guided conversation <span aria-hidden="true">↓</span></button><button className="button button-outline button-large" onClick={()=>navigate("connect")}>Find human support <span aria-hidden="true">↗</span></button></div>
-       <div className="trio-trustline"><span>✳ Youth-first</span><span>◎ Your choice</span><span>♡ Human care matters</span></div>
-       <p className="trio-tech-note">Early prototype: today's conversation is scripted, not connected to a live AI or clinician.</p>
+      <div className="trio-hero-content"><span className="section-label"><span className="section-dot"/> {t("A SAFER FIRST STEP STARTS HERE")}</span>
+       <h1>{t("It\'s okay to ")}<em>{t("not feel okay.")}</em></h1>
+       <p>{t("Some conversations are hard to begin. We’re making it easier to express what’s on your mind, discover mental-health resources, and reach real people when you choose.")}</p>
+       <div className="trio-hero-buttons"><button className="button button-dark button-large" onClick={talk}>{t("Try guided conversation")} <span aria-hidden="true">↓</span></button><button className="button button-outline button-large" onClick={()=>navigate("connect")}>{t("Find human support")} <span aria-hidden="true">↗</span></button></div>
+       <div className="trio-trustline"><span>✳ {t("Youth-first")}</span><span>◎ {t("Your choice")}</span><span>♡ {t("Human care matters")}</span></div>
+       <p className="trio-tech-note">{t("Early prototype: today\'s conversation is scripted, not connected to a live AI or clinician.")}</p>
       </div>
       <div className="trio-hero-art" aria-label="Illustration of a calm, supportive conversation">
         <div className="trio-orbit one"/><div className="trio-orbit two"/>
         <div className="trio-glass-card">
-          <div className="trio-glass-top"><Brand small/><div><strong>Your space</strong><small>Reflect · Explore · Reach out</small></div><span className="trio-availability">DEMO</span></div>
-          <div className="trio-glass-messages"><span>THERE IS NO PERFECT WAY TO START</span><div className="mini-guide">Hi, you're welcome here. What's been on your mind lately?</div><div className="mini-user">A lot, honestly.</div><div className="mini-guide">Would it help to talk a little, or would you prefer to explore human support?</div></div>
+          <div className="trio-glass-top"><Brand small/><div><strong>{t("Your space")}</strong><small>{t("Reflect · Explore · Reach out")}</small></div><span className="trio-availability">DEMO</span></div>
+          <div className="trio-glass-messages"><span>{t("THERE IS NO PERFECT WAY TO START")}</span><div className="mini-guide">Hi, you're welcome here. What's been on your mind lately?</div><div className="mini-user">A lot, honestly.</div><div className="mini-guide">Would it help to talk a little, or would you prefer to explore human support?</div></div>
           <div className="trio-glass-input">Say what's on your mind <span>↑</span></div>
         </div>
-        <div className="trio-annotation first">One step at a time <span>✦</span></div><div className="trio-annotation second">No pressure. No judgment.</div>
+        <div className="trio-annotation first">{t("One step at a time")} <span>✦</span></div><div className="trio-annotation second">{t("No pressure. No judgment.")}</div>
       </div>
      </div></div>
 
      <section className="trio-real-chat-zone" aria-labelledby="chat-section-heading">
       <div className="layout trio-real-chat-layout">
         <div className="trio-real-chat-intro">
-          <div><span className="section-label"><span className="section-dot"/> THE CONVERSATION · INTERACTIVE PREVIEW</span>
-           <h2 id="chat-section-heading">Your space to <em>talk it through.</em></h2>
-           <p>Here is the real, working conversation demo. Pick a starter or write a message. You're in control, and you can move to human support whenever you choose.</p>
+          <div><span className="section-label"><span className="section-dot"/> {t("THE CONVERSATION · INTERACTIVE PREVIEW")}</span>
+           <h2 id="chat-section-heading">{t("Your space to ")}<em>{t("talk it through.")}</em></h2>
+           <p>{t("Here is the real, working conversation demo. Pick a starter or write a message. You\'re in control, and you can move to human support whenever you choose.")}</p>
           </div>
           <div className="trio-chat-direction"><span>01 — REFLECT</span><span>↓</span></div>
         </div>
       <section className="trio-chat-panel trio-hero-chat" aria-label="Interactive guided reflection" id="talk-space">
         <header className="trio-chat-header">
-         <div className="preview-identity"><Brand small/><div><strong>Let's talk.</strong><span>Your guided reflection space</span></div></div>
+         <div className="preview-identity"><Brand small/><div><strong>{t("Let\'s talk.")}</strong><span>{t("Your guided reflection space")}</span></div></div>
          <span className="chat-preview-pill"><span className="chat-preview-dot"/> SCRIPTED DEMO</span>
         </header>
         <div className="trio-chat-topline">
-          <div><span>01 / TALK</span><h2>A space to be heard.</h2><p>You can start with a prompt or write something yourself.</p></div>
-          <button type="button" className="chat-clear" onClick={()=>{setHistory([welcome]);setMessage("");}} aria-label="Clear and start a new conversation">↺ <span>Clear</span></button>
+          <div><span>01 / TALK</span><h2>{t("A space to be heard.")}</h2><p>{t("You can start with a prompt or write something yourself.")}</p></div>
+          <button type="button" className="chat-clear" onClick={()=>{setHistory([welcome]);setMessage("");}} aria-label="Clear and start a new conversation">↺ <span>{t("Clear")}</span></button>
         </div>
         <div ref={chatLogRef} className="trio-chat-log" role="log" aria-live="polite" aria-label="Conversation messages">
           {history.map((entry,i)=><div className={"trio-chat-row "+(entry.role==="user"?"mine":"theirs")} key={i}>
@@ -128,21 +179,21 @@ export default function App(){
           <input id="trio-entry" value={message} onChange={e=>setMessage(e.target.value)} maxLength={400} autoComplete="off"
            readOnly={!accepted} onFocus={()=>{if(!accepted)setConsent(true);}}
            onClick={()=>{if(!accepted)setConsent(true);}}
-           placeholder={accepted?"Type your message here…":"Tap here to begin talking…"} />
-          <button type={accepted?"submit":"button"} onClick={accepted?undefined:()=>setConsent(true)} disabled={accepted&&!message.trim()} aria-label={accepted?"Send your message":"Begin guided conversation"}>{accepted?"↑":"Start ↗"}</button>
+           placeholder={t(accepted?"Type your message here…":"Tap here to begin talking…")} />
+          <button type={accepted?"submit":"button"} onClick={accepted?undefined:()=>setConsent(true)} disabled={accepted&&!message.trim()} aria-label={accepted?"Send your message":"Begin guided conversation"}>{accepted?"↑":t("Start")+" ↗"}</button>
         </form>
-        <div className="trio-chat-foot"><span>ⓘ</span> {accepted?"Messages stay in this tab; they are not sent to a clinician.":"Not live AI or therapy. Review the demo disclosure before chatting."}</div>
+        <div className="trio-chat-foot"><span>ⓘ</span> {t(accepted?"Messages stay in this tab; they are not sent to a clinician.":"Not live AI or therapy. Review the demo disclosure before chatting.")}</div>
       </section>
       </div>
      </section>
      <div className="trio-band"><div className="layout"><span>AN OUTLET TO TALK</span><span>✳</span><span>A LIBRARY TO LEARN</span><span>✳</span><span>A PATH TO CONNECT</span></div></div>
      <div className="layout trio-below-chat">
-      <div className="trio-support-heading"><span className="section-label">SUPPORT BEYOND THE CONVERSATION</span><h2>There is no <em>single right way</em> to begin.</h2><p>Take a quiet moment, explore trusted information, or move directly toward human support. You're always in control.</p></div>
+      <div className="trio-support-heading"><span className="section-label">{t("SUPPORT BEYOND THE CONVERSATION")}</span><h2>{t("There is no ")}<em>{t("single right way")}</em>{t(" to begin.")}</h2><p>{t("Take a quiet moment, explore trusted information, or move directly toward human support. You\'re always in control.")}</p></div>
       <div className="trio-quick-actions" aria-label="More support options">
-       <button onClick={()=>setPause(0)}><span className="quick-icon">◌</span><span><strong>Take a pause</strong><small>Three optional grounding steps</small></span><b>↗</b></button>
-       <button onClick={()=>navigate("learn")}><span className="quick-icon">▤</span><span><strong>Explore awareness</strong><small>Read approachable wellbeing articles</small></span><b>↗</b></button>
-       <button onClick={()=>navigate("connect")}><span className="quick-icon">♡</span><span><strong>Reach real support</strong><small>Plan the next step with a person</small></span><b>↗</b></button>
-       <button onClick={()=>setEmergency(true)}><span className="quick-icon">+</span><span><strong>Need urgent help?</strong><small>Access independent emergency guidance</small></span><b>↗</b></button>
+       <button onClick={()=>setPause(0)}><span className="quick-icon">◌</span><span><strong>{t("Take a pause")}</strong><small>Three optional grounding steps</small></span><b>↗</b></button>
+       <button onClick={()=>navigate("learn")}><span className="quick-icon">▤</span><span><strong>{t("Explore awareness")}</strong><small>Read approachable wellbeing articles</small></span><b>↗</b></button>
+       <button onClick={()=>navigate("connect")}><span className="quick-icon">♡</span><span><strong>{t("Reach real support")}</strong><small>Plan the next step with a person</small></span><b>↗</b></button>
+       <button onClick={()=>setEmergency(true)}><span className="quick-icon">+</span><span><strong>{t("Need urgent help?")}</strong><small>Access independent emergency guidance</small></span><b>↗</b></button>
       </div>
      </div>
      <div className="layout trio-next-steps"><button onClick={()=>navigate("learn")}><span className="section-label">02 / LEARN</span><strong>Find a little perspective.</strong><span>Mental-health awareness, simple education and source links →</span></button><button onClick={()=>navigate("connect")}><span className="section-label">03 / CONNECT</span><strong>Take the next step with a person.</strong><span>Understand care options and prepare a first message →</span></button></div>
@@ -150,10 +201,10 @@ export default function App(){
    {tab==="learn"&&<Learn onTalk={talk} onConnect={()=>navigate("connect")}/>}
    {tab==="connect"&&<Connect/>}
   </main>
-  <footer className="site-footer trio-footer"><div className="layout trio-footer-grid"><div><button className="footer-brand brand-signature" onClick={()=>navigate("talk")} aria-label="Zim Safe Minds — return to Talk"><span className="brand-wordmark-glass"><img src={brandAssetBase+"brand/zim-safe-minds-wordmark.webp"} alt="Zim Safe Minds" width="920" height="292" decoding="async" /></span></button><p>A safe space to talk. A path to real support.</p><small>Early Zimbabwe youth mental-wellbeing research prototype.</small></div><nav aria-label="Footer"><strong>Explore</strong><button onClick={()=>navigate("talk")}>Talk</button><button onClick={()=>navigate("learn")}>Learn</button><button onClick={()=>navigate("connect")}>Connect</button></nav><div><strong>Important</strong><button onClick={()=>setEmergency(true)}>Urgent help</button><a href="https://www.friendshipbenchzimbabwe.org/online" target="_blank" rel="noopener noreferrer">Independent support ↗</a><small>Not therapy or a crisis service</small></div></div><div className="layout footer-bottom"><span>© 2026 Zim Safe Minds · Developed in Zimbabwe</span><span>Scripted prototype · Human care comes first</span></div></footer>
-  <button className="urgent-float" onClick={()=>setEmergency(true)}>Help right now ↗</button>
-  {consent&&<div className="modal-backdrop" role="presentation"><div className="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="trio-consent-title"><span className="section-label">BEFORE YOU BEGIN</span><h2 id="trio-consent-title">Your comfort comes first.</h2><p>This is a <strong>scripted demonstration</strong> of our future AI-guided reflection feature, not a live AI model or therapist. It cannot diagnose, provide medical advice, monitor safety or book care.</p><p>Messages remain in your browser tab only until you refresh or leave. The host may log standard website access. Do not share identifying or sensitive health information. If someone is in immediate danger, seek emergency medical care.</p><p><strong>For adults 18+ only.</strong> You can skip this and visit Connect instead.</p><div className="modal-buttons"><button className="button button-outline" onClick={()=>{setConsent(false);setPendingPrompt(null);}}>Not now</button><button className="button button-dark" onClick={beginAfterConsent}>I understand · Continue ↗</button></div></div></div>}
-  {emergency&&<div className="modal-backdrop" role="presentation"><div className="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="trio-emergency-title"><span className="section-label">IMMEDIATE SUPPORT</span><h2 id="trio-emergency-title">Please seek real help now.</h2><p>{CRISIS_COPY}</p><p>This website is not monitored by any clinician. It cannot call anyone for you. We do not show unverified crisis hotline details.</p><button className="button button-dark" onClick={()=>setEmergency(false)}>Close guidance</button></div></div>}
-  {pause!==null&&<div className="modal-backdrop" role="presentation"><div className="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="trio-pause-title"><span className="section-label">A GENTLE MOMENT · {pause+1} / 3</span><h2 id="trio-pause-title">{pauses[pause].title}</h2><p>{pauses[pause].body}</p><p className="smallprint">Optional grounding activity. This is not clinical treatment; stop if uncomfortable.</p><div className="modal-buttons"><button className="button button-outline" onClick={()=>setPause(null)}>Finish</button><button className="button button-dark" onClick={()=>setPause(pause===2?null:pause+1)}>{pause===2?"Done":"Next step"} ↗</button></div></div></div>}
+  <footer className="site-footer trio-footer"><div className="layout trio-footer-grid"><div><button className="footer-brand brand-signature" onClick={()=>navigate("talk")} aria-label="Zim Safe Minds — return to Talk"><span className="brand-wordmark-glass"><img src={brandAssetBase+"brand/zim-safe-minds-wordmark.webp"} alt="Zim Safe Minds" width="920" height="292" decoding="async" /></span></button><p>{t("A safe space to talk. A path to real support.")}</p><small>Early Zimbabwe youth mental-wellbeing research prototype.</small></div><nav aria-label="Footer"><strong>{t("Explore")}</strong><button onClick={()=>navigate("talk")}>{t("Talk")}</button><button onClick={()=>navigate("learn")}>{t("Learn")}</button><button onClick={()=>navigate("connect")}>{t("Connect")}</button></nav><div><strong>{t("Important")}</strong><button onClick={()=>setEmergency(true)}>{t("Urgent help")}</button><a href="https://www.friendshipbenchzimbabwe.org/online" target="_blank" rel="noopener noreferrer">{t("Independent support")} ↗</a><small>{t("Not therapy or a crisis service")}</small></div></div><div className="layout footer-bottom"><span>© 2026 Zim Safe Minds · Developed in Zimbabwe</span><span>Scripted prototype · Human care comes first</span></div></footer>
+  <button className="urgent-float" onClick={()=>setEmergency(true)}>{t("Help right now")} ↗</button>
+  {consent&&<div className="modal-backdrop" role="presentation"><div className="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="trio-consent-title"><span className="section-label">{t("BEFORE YOU BEGIN")}</span><h2 id="trio-consent-title">{t("Your comfort comes first.")}</h2><p>This is a <strong>scripted demonstration</strong> of our future AI-guided reflection feature, not a live AI model or therapist. It cannot diagnose, provide medical advice, monitor safety or book care.</p><p>Messages remain in your browser tab only until you refresh or leave. The host may log standard website access. Do not share identifying or sensitive health information. If someone is in immediate danger, seek emergency medical care.</p><p><strong>For adults 18+ only.</strong> You can skip this and visit Connect instead.</p><div className="modal-buttons"><button className="button button-outline" onClick={()=>{setConsent(false);setPendingPrompt(null);}}>{t("Not now")}</button><button className="button button-dark" onClick={beginAfterConsent}>{t("I understand · Continue")} ↗</button></div></div></div>}
+  {emergency&&<div className="modal-backdrop" role="presentation"><div className="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="trio-emergency-title"><span className="section-label">{t("IMMEDIATE SUPPORT")}</span><h2 id="trio-emergency-title">{t("Please seek real help now.")}</h2><p>{CRISIS_COPY}</p><p>This website is not monitored by any clinician. It cannot call anyone for you. We do not show unverified crisis hotline details.</p><button className="button button-dark" onClick={()=>setEmergency(false)}>{t("Close guidance")}</button></div></div>}
+  {pause!==null&&<div className="modal-backdrop" role="presentation"><div className="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="trio-pause-title"><span className="section-label">A GENTLE MOMENT · {pause+1} / 3</span><h2 id="trio-pause-title">{pauses[pause].title}</h2><p>{pauses[pause].body}</p><p className="smallprint">Optional grounding activity. This is not clinical treatment; stop if uncomfortable.</p><div className="modal-buttons"><button className="button button-outline" onClick={()=>setPause(null)}>{t("Finish")}</button><button className="button button-dark" onClick={()=>setPause(pause===2?null:pause+1)}>{t(pause===2?"Done":"Next step")} ↗</button></div></div></div>}
  </div>;
 }
