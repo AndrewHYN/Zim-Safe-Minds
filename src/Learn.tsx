@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { tr, type Language } from "./i18n";
-import { t, type Locale } from "./copy";
+import { t as copyT, type Locale } from "./copy";
 import { posts, categories, filterPosts } from "./lib/learnContent.mjs";
 type Post = (typeof posts)[number];
 type LearnProps = { onTalk:()=>void; onConnect:()=>void; locale:Locale };
 export default function Learn({onTalk,onConnect,locale}:LearnProps){
+ const t=(value:string)=>tr(locale as Language,value);
  const [category,setCategory]=useState("All");
  const [query,setQuery]=useState("");
  const [active,setActive]=useState<Post|null>(null);
@@ -31,7 +32,7 @@ export default function Learn({onTalk,onConnect,locale}:LearnProps){
     <div className="learn-feature-art"><span>{t("WELLBEING / 001")}</span><div className="feature-petal">✳</div><strong>{t("A little kindness goes a long way.")}</strong><small>{t("ONE STEP AT A TIME")}</small></div>
     <div className="learn-feature-copy"><span className="section-label">{t("FEATURED STORY · 3 MIN READ")}</span><h2>{t(featured.title)}</h2><p>{t(featured.excerpt)}</p><button className="button button-dark" onClick={()=>setActive(featured)}>Read the story <span aria-hidden="true">↗</span></button></div>
    </div>
-   <div className="learn-toolbar"><div><span className="section-label">{t("THE LIBRARY")}</span><h2>{t(locale,"learnTitle")}</h2></div><label className="learn-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search awareness articles</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t("Search the library…")}/></label></div>
+   <div className="learn-toolbar"><div><span className="section-label">{t("THE LIBRARY")}</span><h2>{copyT(locale,"learnTitle")}</h2></div><label className="learn-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search awareness articles</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t("Search the library…")}/></label></div>
    <div className="learn-filters" aria-label={t("Filter topics")}>{categories.map(c=><button key={c} aria-pressed={category===c} className={category===c?"filter-active":""} onClick={()=>setCategory(c)}>{t(c)}</button>)}</div>
    <div className="learn-grid">
     {results.map(post=><article className="learn-card" key={post.id}>

@@ -4,6 +4,7 @@ import { type Locale } from "./copy";
 import CarePath from "./CarePath";
 import {appointmentChoices,appointmentMessage} from "./lib/appointmentPreview.mjs";
 export default function Connect({locale}:{locale:Locale}){
+ const t=(value:string)=>tr(locale as Language,value);
  const choices=appointmentChoices();
  const [service,setService]=useState("intro");
  const [format,setFormat]=useState("either");
@@ -17,7 +18,7 @@ export default function Connect({locale}:{locale:Locale}){
  }
  return <div className="connect-page">
    <div className="layout connect-header"><div><span className="section-label"><span className="section-dot"/> CONNECT / HUMAN SUPPORT</span><h1>{locale==="sn"?"Vanhu chaivo.":locale==="nd"?"Abantu boqobo.":"Real people."} <em>{locale==="sn"?"Rubatsiro rwechokwadi.":locale==="nd"?"Usizo lweqiniso.":"Real support."}</em><br/>{locale==="sn"?"Sarudzo yako.":locale==="nd"?"Ukukhetha kwakho.":"Your choice."}</h1><p>{locale==="sn"?"Ongorora nzira dzako, uye gadzirira kutaura nemunhu. Hapana chikonzero chekugovera hurukuro yako.":locale==="nd"?"Hlola izindlela ezikhona, ulungiselele ukukhuluma lomuntu. Akudingeki ukuthi wabelane ngengxoxo yakho.":"Explore your options and prepare to make that first contact. You never have to share a chat transcript to look for help."}</p>
-    <div className="connect-trust"><span>{t("✓ {t("User-led choice")}")}</span><span>{t("✓ {t("No hidden transcript sharing")}")}</span><span>{t("✓ {t("Independent sources")}")}</span></div>
+    <div className="connect-trust"><span>✓ {t("User-led choice")}</span><span>✓ {t("No hidden transcript sharing")}</span><span>✓ {t("Independent sources")}</span></div>
    </div><div className="connect-header-visual" aria-hidden="true"><div className="connect-orbit"><div className="connect-pulse">♡</div></div><span>{t("FROM A FIRST THOUGHT")}</span><strong>{t("to a real conversation.")}</strong></div></div>
    <div className="layout">
     <div className="connect-heading"><span className="section-label">{t("A SIMPLE PATH FORWARD")}</span><h2>{t("How getting support can work.")}</h2></div>

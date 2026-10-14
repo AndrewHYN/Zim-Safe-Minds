@@ -20,6 +20,7 @@ const budgets:{value:Budget;title:string;subtitle:string}[]=[
 ];
 const languages:Language[]=["English","Shona","Ndebele"];
 export default function CarePath({locale}:{locale:Locale}){
+  const t=(value:string)=>tr(locale as SiteLanguage,value);
   const [stage,setStage]=useState<Stage>(0);
   const [mode,setMode]=useState<Mode>("either");
   const [budget,setBudget]=useState<Budget>("free");
