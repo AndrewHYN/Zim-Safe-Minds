@@ -1,3 +1,4 @@
+import { extraTranslation } from "./i18nExtra";
 export type Language = "en" | "sn" | "nd";
 export const languages: {id:Language; name:string; local:string; welcome:string}[] = [
  {id:"sn",name:"Shona",local:"ChiShona",welcome:"Unogamuchirwa"},
@@ -80,5 +81,5 @@ const ndebele:Record<string,string>={
 };
 export function tr(lang:Language, english:string):string {
  const dictionary:Record<string,string>=lang==="sn"?shona:lang==="nd"?ndebele:{};
- return dictionary[english] ?? english;
+ return dictionary[english] ?? extraTranslation(lang,english) ?? english;
 }
