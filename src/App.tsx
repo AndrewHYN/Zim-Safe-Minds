@@ -29,6 +29,7 @@ function Brand({small=false}:{small?:boolean}){
  </span>;
 }
 export default function App(){
+ const [tab,setTab]=useState<Tab>("talk");
 
  const [language,setLanguage]=useState<Language|null>(()=>readLanguage());
  const [stage,setStage]=useState<"language"|"auth"|"app">(()=>{
@@ -39,9 +40,9 @@ export default function App(){
  const lang=language??"en";
  const t=(text:string)=>tr(lang,text);
  useEffect(()=>{
-   saveLanguage(lang);
+   if(language)saveLanguage(language);
    document.title="Zim Safe Minds | "+t("Talk")+" · "+t("Learn")+" · "+t("Connect");
- },[lang]);
+ },[lang,language]);
  useEffect(()=>{
   if(!auth)return;
   let mounted=true;
