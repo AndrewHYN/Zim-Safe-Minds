@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 const app=readFileSync(new URL("../src/App.tsx",import.meta.url),"utf8");
 const css=readFileSync(new URL("../src/styles.css",import.meta.url),"utf8");
+const copy=readFileSync(new URL("../src/copy.ts",import.meta.url),"utf8");
 test("the original beautiful hero graphic is restored and real chat comes directly beneath it",()=>{
  assert.match(app,/className="trio-chat-panel trio-hero-chat"/);
  assert.equal((app.match(/className="trio-glass-card"/g)||[]).length,1);
@@ -20,7 +21,8 @@ test("chat entry and starters require consent before sending",()=>{
  assert.ok(app.includes("function selectSuggestion(value:string)"));
  assert.ok(app.includes("setPendingPrompt(value);setConsent(true)"));
  assert.ok(app.includes("onClick={beginAfterConsent}"));
- assert.match(app,/Not live AI or therapy/);
+ assert.match(app,/translate\("chatFooterWait"\)/);
+ assert.match(copy,/Not live AI or therapy/);
 });
 test("bright chat overrides the dark Afterglow background",()=>{
  assert.ok(css.includes(".trio-app .trio-hero-chat{"));
