@@ -5,7 +5,6 @@ import CarePath from "./CarePath";
 import {appointmentChoices,appointmentMessage} from "./lib/appointmentPreview.mjs";
 export default function Connect({locale}:{locale:Locale}){
  const t=(english:string)=>tr(locale,english);
- const t=(value:string)=>tr(locale as Language,value);
  const choices=appointmentChoices();
  const [service,setService]=useState("intro");
  const [format,setFormat]=useState("either");

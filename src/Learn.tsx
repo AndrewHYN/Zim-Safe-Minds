@@ -6,7 +6,6 @@ type Post = (typeof posts)[number];
 type LearnProps = { onTalk:()=>void; onConnect:()=>void; locale:Locale };
 export default function Learn({onTalk,onConnect,locale}:LearnProps){
  const t=(english:string)=>tr(locale,english);
- const t=(value:string)=>tr(locale as Language,value);
  const [category,setCategory]=useState("All");
  const [query,setQuery]=useState("");
  const [active,setActive]=useState<Post|null>(null);
