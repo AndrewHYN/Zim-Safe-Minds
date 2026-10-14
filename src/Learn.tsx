@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { tr, type Language } from "./i18n";
+import { tr } from "./i18n";
 import { t as copyT, type Locale } from "./copy";
 import { posts, categories, filterPosts } from "./lib/learnContent.mjs";
 type Post = (typeof posts)[number];
 type LearnProps = { onTalk:()=>void; onConnect:()=>void; locale:Locale };
 export default function Learn({onTalk,onConnect,locale}:LearnProps){
+ const t=(english:string)=>tr(locale,english);
  const t=(value:string)=>tr(locale as Language,value);
  const [category,setCategory]=useState("All");
  const [query,setQuery]=useState("");
@@ -49,14 +50,14 @@ export default function Learn({onTalk,onConnect,locale}:LearnProps){
    </div>
    {results.length===0&&<div className="learn-empty"><h3>{t("No matches just yet.")}</h3><p>{t("Try a different topic or clear your search.")}</p><button className="button button-outline" onClick={()=>{setCategory("All");setQuery("");}}>{t("Show everything")}</button></div>}
    <div className="learn-more-panel"><div><span className="section-label">{t("WHEN READING ISN'T ENOUGH")}</span><h2>{t("You can take the next step.")}</h2><p>{t("Reach out for a conversation or explore available care information when you're ready.")}</p></div><div><button className="button button-dark" onClick={onTalk}>{t("Try guided reflection ↗")}</button><button className="button button-outline" onClick={onConnect}>{t("Find real support ↗")}</button></div></div>
-   {language!=="en"&&<p className="zsm-translation-note" role="note">{t("Some learning articles and detailed guidance are still in English while Shona and Ndebele wording is reviewed.")}</p>}
+   {locale!=="en"&&<p className="zsm-translation-note" role="note">{t("Some learning articles and detailed guidance are still in English while Shona and Ndebele wording is reviewed.")}</p>}
    <p className="learn-editorial-note">Editorial awareness content, not personal medical advice or a live news feed. Articles link to independent sources; no clinician review or partnership is claimed. Saved items last only while this page is open.</p>
   </div>
   {active&&<div className="modal-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setActive(null);}}>
     <article className="modal-dialog learn-article-modal" role="dialog" aria-modal="true" aria-labelledby="article-title">
       <button className="article-close" autoFocus onClick={()=>setActive(null)} aria-label={t("Close")}>×</button>
       <span className="section-label">{active.eyebrow} · {active.read}</span><h2 id="article-title">{t(active.title)}</h2>
-      <p className="article-deck">{t(active.excerpt)}</p>{language!=="en"&&<p className="zsm-translation-note">{t("Some learning articles and detailed guidance are still in English while Shona and Ndebele wording is reviewed.")}</p>}{active.paragraphs.map((p,i)=><p key={i}>{p}</p>)}
+      <p className="article-deck">{t(active.excerpt)}</p>{locale!=="en"&&<p className="zsm-translation-note">{t("Some learning articles and detailed guidance are still in English while Shona and Ndebele wording is reviewed.")}</p>}{active.paragraphs.map((p,i)=><p key={i}>{p}</p>)}
       <a className="article-source" href={active.sourceUrl} target="_blank" rel="noopener noreferrer">{t("Explore the source: ")}{active.sourceLabel} ↗</a>
       <div className="article-footer"><button className="button button-outline" onClick={()=>setActive(null)}>{t("Back to Learn")}</button><button className="button button-dark" onClick={()=>{setActive(null);onConnect();}}>{t("Explore support ↗")}</button></div>
     </article>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { tr, type Language as SiteLanguage } from "./i18n";
+import { tr } from "./i18n";
 import type { Locale } from "./copy";
 import { careSummary, careCopy, firstContactNote } from "./lib/careOptions.mjs";
 
@@ -20,11 +20,13 @@ const budgets:{value:Budget;title:string;subtitle:string}[]=[
 ];
 const languages:Language[]=["English","Shona","Ndebele"];
 export default function CarePath({locale}:{locale:Locale}){
+  const t=(english:string)=>tr(locale,english);
   const t=(value:string)=>tr(locale as SiteLanguage,value);
   const [stage,setStage]=useState<Stage>(0);
   const [mode,setMode]=useState<Mode>("either");
   const [budget,setBudget]=useState<Budget>("free");
   const [language,setLanguage]=useState<Language>(locale==="sn"?"Shona":locale==="nd"?"Ndebele":"English");
+  useEffect(()=>{setLanguage(locale==="sn"?"Shona":locale==="nd"?"Ndebele":"English");},[locale]);
   const [copied,setCopied]=useState(false);
   const [contactCopied,setContactCopied]=useState(false);
   const [copyError,setCopyError]=useState(false);

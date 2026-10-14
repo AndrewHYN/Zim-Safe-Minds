@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { tr, type Language } from "./i18n";
+import { tr } from "./i18n";
 import { type Locale } from "./copy";
 import CarePath from "./CarePath";
 import {appointmentChoices,appointmentMessage} from "./lib/appointmentPreview.mjs";
 export default function Connect({locale}:{locale:Locale}){
+ const t=(english:string)=>tr(locale,english);
  const t=(value:string)=>tr(locale as Language,value);
  const choices=appointmentChoices();
  const [service,setService]=useState("intro");
@@ -34,11 +35,11 @@ export default function Connect({locale}:{locale:Locale}){
          <label htmlFor="session-type">{t("What kind of information would you like?")}</label>
          <select id="session-type" value={service} onChange={e=>{setService(e.target.value);setCopied(false);}}>{choices.service.map(v=><option key={v.value} value={v.value}>{t(v.label)}</option>)}</select>
          <label htmlFor="meeting-type">{t("How would you prefer to connect?")}</label>
-         <select id="meeting-type" value={format} onChange={e=>{setFormat(e.target.value);setCopied(false);}}>{choices.format.map(v=><option key={v.value} value={v.value}>{v.label}</option>)}</select>
+         <select id="meeting-type" value={format} onChange={e=>{setFormat(e.target.value);setCopied(false);}}>{choices.format.map(v=><option key={v.value} value={v.value}>{t(v.label)}</option>)}</select>
          <label htmlFor="time-type">{t("When would you generally be free?")}</label>
-         <select id="time-type" value={timing} onChange={e=>{setTiming(e.target.value);setCopied(false);}}>{choices.timing.map(v=><option key={v.value} value={v.value}>{v.label}</option>)}</select>
+         <select id="time-type" value={timing} onChange={e=>{setTiming(e.target.value);setCopied(false);}}>{choices.timing.map(v=><option key={v.value} value={v.value}>{t(v.label)}</option>)}</select>
        </div>
-       <div className="booking-result"><span>{t("YOUR DRAFT MESSAGE")}</span><pre>{text}</pre><button type="button" className="button button-dark" onClick={copy}>{copied?"✓ Copied — review before sending":"Copy request text ↗"}</button>{error&&<p role="status">Copying is unavailable in this browser. You can manually select the text above.</p>}<small>Nothing is transmitted by Zim Safe Minds. You choose if, when and whom to contact.</small></div>
+       <div className="booking-result"><span>{t("YOUR DRAFT MESSAGE")}</span><pre>{text}</pre><button type="button" className="button button-dark" onClick={copy}>{copied?"✓ "+t("Copied — review before sending"):t("Copy request text")+" ↗"}</button>{error&&<p role="status">Copying is unavailable in this browser. You can manually select the text above.</p>}<small>Nothing is transmitted by Zim Safe Minds. You choose if, when and whom to contact.</small></div>
       </div>
     </section>
    </div>
