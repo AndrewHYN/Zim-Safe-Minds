@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import Learn from "./Learn";
 import Entry from "./Entry";
+import Account from "./Account";
+import {authClient,authEnabled} from "./auth";
+import type {User} from "@supabase/supabase-js";
 import {languages,readPreferredLocale,savePreferredLocale,t,type Locale,type CopyKey} from "./copy";
 import "./entry.css";
 import Connect from "./Connect";
@@ -31,10 +34,37 @@ export default function App(){
  const [tab,setTab]=useState<Tab>("talk");
  const [locale,setLocale]=useState<Locale|null>(readPreferredLocale);
  const [entryOpen,setEntryOpen]=useState(()=>!readPreferredLocale());
+ const [authUser,setAuthUser]=useState<User|null>(null);
+ const [authReady,setAuthReady]=useState(!authEnabled);
+ const [accountOpen,setAccountOpen]=useState(false);
+ const [recovery,setRecovery]=useState(false);
+ const accountRef=useRef<HTMLButtonElement>(null);
  const uiLocale=locale??"sn";
  const translate=(key:CopyKey)=>t(uiLocale,key);
  function chooseLocale(code:Locale){setLocale(code);savePreferredLocale(code);}
  function enterPlatform(){savePreferredLocale(uiLocale);setLocale(uiLocale);setEntryOpen(false);}
+ function openAccount(){
+  setMobile(false);
+  if(authUser){setEntryOpen(false);setAccountOpen(true);}
+  else if(authReady){setEntryOpen(true);setAccountOpen(false);}
+  else setAccountOpen(true);
+ }
+ function closeAccount(){setAccountOpen(false);requestAnimationFrame(()=>accountRef.current?.focus({preventScroll:true}));}
+ useEffect(()=>{
+  if(!authClient)return;
+  const client=authClient;let active=true;
+  const {data:{subscription}}=client.auth.onAuthStateChange((event,session)=>{
+   if(!active)return;
+   if(event==="SIGNED_OUT"){setAuthUser(null);setAuthReady(true);}
+   if(event==="SIGNED_IN"||event==="TOKEN_REFRESHED"||event==="USER_UPDATED"){setAuthUser(session?.user??null);}
+   if(event==="PASSWORD_RECOVERY"){setAuthUser(session?.user??null);setAuthReady(true);setRecovery(true);setAccountOpen(true);setEntryOpen(false);}
+  });
+  void client.auth.getUser().then(({data,error})=>{if(active){setAuthUser(error?null:data.user);setAuthReady(true);}}).catch(()=>{if(active)setAuthReady(true);});
+  return()=>{active=false;subscription.unsubscribe();};
+ },[]);
+ useEffect(()=>{
+  if(authReady&&!authUser&&accountOpen){setAccountOpen(false);setRecovery(false);setEntryOpen(true);}
+ },[authReady,authUser,accountOpen]);
  const [theme,setTheme]=useState<Theme>("afterglow");
  const [mobile,setMobile]=useState(false);
  const [consent,setConsent]=useState(false);
@@ -74,7 +104,7 @@ export default function App(){
  function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();if(accepted)send(message);}
  const hasUrgent=history.some(m=>m.urgent);
  return <div className={"app-shell palette-"+theme+" trio-app "+(entryOpen?"zsm-entry-open":"")}>
-  {entryOpen&&<Entry locale={uiLocale} onChoose={chooseLocale} onEnter={enterPlatform} onUrgent={()=>setEmergency(true)}/>}
+  {entryOpen&&<Entry locale={uiLocale} user={authUser} onAuthenticated={setAuthUser} onSignedOut={()=>setAuthUser(null)} onChoose={chooseLocale} onEnter={enterPlatform} onUrgent={()=>setEmergency(true)}/>}
   <div className="service-ribbon"><div className="layout ribbon-content"><span><span className="live-dot"/> ZIMBABWE-BUILT · YOUTH MENTAL WELLBEING PROTOTYPE</span><button onClick={()=>setEmergency(true)}>{translate("urgent")} ↗</button></div></div>
   <header className="site-header trio-header"><div className="layout nav-shell trio-navshell">
    <button className="brand" onClick={()=>navigate("talk")} aria-label="Zim Safe Minds — Talk"><Brand/><span>Zim<span className="brand-light">Safe</span>Minds<span className="brand-period">.</span></span></button>
@@ -83,7 +113,7 @@ export default function App(){
     <button className={tab==="learn"?"selected":""} aria-current={tab==="learn"?"page":undefined} onClick={()=>navigate("learn")}><span>02</span> {translate("learn")}</button>
     <button className={tab==="connect"?"selected":""} aria-current={tab==="connect"?"page":undefined} onClick={()=>navigate("connect")}><span>03</span> {translate("connect")}</button>
    </nav>
-   <div className="nav-actions"><label className="sr-only" htmlFor="zsm-language-switch">{translate("changeLanguage")}</label><select id="zsm-language-switch" className="zsm-header-language" aria-label={translate("changeLanguage")} value={uiLocale} onChange={e=>chooseLocale(e.target.value as Locale)}>{languages.map(l=><option key={l.code} value={l.code}>{l.native}</option>)}</select><button className="zsm-header-account" onClick={()=>setEntryOpen(true)}>{translate("account")}</button><button className="palette-switch" onClick={()=>setTheme(t=>t==="daylight"?"afterglow":"daylight")} aria-label={theme==="daylight"?"Switch to Afterglow night theme":"Switch to Daylight theme"} title="Switch calming color theme"><span aria-hidden="true">{theme==="daylight"?"☾":"☀"}</span><span>{theme==="daylight"?"Afterglow":"Daylight"}</span></button><button className="menu-control" onClick={()=>setMobile(v=>!v)} aria-label="Toggle main navigation" aria-expanded={mobile}>☰</button></div>
+   <div className="nav-actions"><label className="sr-only" htmlFor="zsm-language-switch">{translate("changeLanguage")}</label><select id="zsm-language-switch" className="zsm-header-language" aria-label={translate("changeLanguage")} value={uiLocale} onChange={e=>chooseLocale(e.target.value as Locale)}>{languages.map(l=><option key={l.code} value={l.code}>{l.native}</option>)}</select><button type="button" ref={accountRef} className={"zsm-header-account "+(authUser?"zsm-header-account-active":"")} onClick={openAccount} aria-haspopup="dialog" aria-expanded={accountOpen}>{authUser?<><span className="zsm-account-small-avatar" aria-hidden="true">{String(authUser.user_metadata?.display_name||authUser.email||"A").charAt(0).toUpperCase()}</span>{String(authUser.user_metadata?.display_name||translate("account")).slice(0,18)}</>:translate("account")}</button><button className="palette-switch" onClick={()=>setTheme(t=>t==="daylight"?"afterglow":"daylight")} aria-label={theme==="daylight"?"Switch to Afterglow night theme":"Switch to Daylight theme"} title="Switch calming color theme"><span aria-hidden="true">{theme==="daylight"?"☾":"☀"}</span><span>{theme==="daylight"?"Afterglow":"Daylight"}</span></button><button className="menu-control" onClick={()=>setMobile(v=>!v)} aria-label="Toggle main navigation" aria-expanded={mobile}>☰</button></div>
   </div></header>
   <main>
    {tab==="talk"&&<section className="trio-talk">
@@ -176,6 +206,8 @@ export default function App(){
   </main>
   <footer className="site-footer trio-footer"><div className="layout trio-footer-grid"><div><button className="footer-brand brand-signature" onClick={()=>navigate("talk")} aria-label="Zim Safe Minds — return to Talk"><span className="brand-wordmark-glass"><img src={brandAssetBase+"brand/zim-safe-minds-wordmark.webp"} alt="Zim Safe Minds" width="920" height="292" decoding="async" /></span></button><p>{translate("footTagline")}</p><small>{translate("footPrototype")}</small></div><nav aria-label="Footer"><strong>{translate("footExplore")}</strong><button onClick={()=>navigate("talk")}>{translate("talk")}</button><button onClick={()=>navigate("learn")}>{translate("learn")}</button><button onClick={()=>navigate("connect")}>{translate("connect")}</button></nav><div><strong>{translate("footImportant")}</strong><button onClick={()=>setEmergency(true)}>{translate("urgent")}</button><a href="https://www.friendshipbenchzimbabwe.org/online" target="_blank" rel="noopener noreferrer">{translate("footIndependent")} ↗</a><small>{translate("footTherapy")}</small></div></div><div className="layout footer-bottom"><span>© 2026 Zim Safe Minds · Developed in Zimbabwe</span><span>{translate("footScripted")}</span></div></footer>
   <button className="urgent-float" onClick={()=>setEmergency(true)}>{translate("helpNow")} ↗</button>
+  {accountOpen&&authReady&&authUser&&<Account user={authUser} locale={uiLocale} theme={theme} recovery={recovery} onRecoveryComplete={()=>setRecovery(false)} onLocaleChange={chooseLocale} onThemeChange={setTheme} onClose={closeAccount} onSignOut={()=>{setAuthUser(null);setAccountOpen(false);setEntryOpen(true);}}/>}
+  {accountOpen&&!authReady&&<div className="zsm-profile-overlay" role="status"><div className="zsm-account-loading">Checking your account session…</div></div>}
   {consent&&<div className="modal-backdrop" role="presentation"><div className="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="trio-consent-title"><span className="section-label">{translate("consentLabel")}</span><h2 id="trio-consent-title">{translate("consentTitle")}</h2><p>{translate("consentP1")}</p><p>{translate("consentP2")}</p><p>Website hosts may retain ordinary access logs. {uiLocale==="en"?"You can skip this and visit Connect instead.":translate("partialTranslation")}</p><div className="modal-buttons"><button className="button button-outline" onClick={()=>{setConsent(false);setPendingPrompt(null);}}>{translate("notNow")}</button><button className="button button-dark" onClick={beginAfterConsent}>{translate("agree")} ↗</button></div></div></div>}
   {emergency&&<div className="modal-backdrop" role="presentation"><div className="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="trio-emergency-title"><span className="section-label">{translate("emergencyLabel")}</span><h2 id="trio-emergency-title">{translate("emergencyTitle")}</h2><p>{translate("emergencyNote")}</p>{uiLocale==="en"&&<p>{CRISIS_COPY}</p>}<button className="button button-dark" onClick={()=>setEmergency(false)}>{translate("emergencyClose")}</button></div></div>}
   {pause!==null&&<div className="modal-backdrop" role="presentation"><div className="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="trio-pause-title"><span className="section-label">A GENTLE MOMENT · {pause+1} / 3</span><h2 id="trio-pause-title">{pauses[pause].title}</h2><p>{pauses[pause].body}</p><p className="smallprint">Optional grounding activity. This is not clinical treatment; stop if uncomfortable.</p><div className="modal-buttons"><button className="button button-outline" onClick={()=>setPause(null)}>Finish</button><button className="button button-dark" onClick={()=>setPause(pause===2?null:pause+1)}>{pause===2?"Done":"Next step"} ↗</button></div></div></div>}
