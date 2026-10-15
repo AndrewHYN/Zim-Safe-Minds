@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
+import {useState} from "react";
+import type {User} from "@supabase/supabase-js";
 import type { FormEvent } from "react";
 import { authClient, authEnabled } from "./auth";
 import { languages, type Locale } from "./copy";
 
 type Mode="register"|"login";
-type Props={locale:Locale;onChoose:(locale:Locale)=>void;onEnter:()=>void;onUrgent:()=>void};
+type Props={locale:Locale;user:User|null;onAuthenticated:(user:User)=>void;onSignedOut:()=>void;onChoose:(locale:Locale)=>void;onEnter:()=>void;onUrgent:()=>void};
 const words={
  sn:{eyebrow:"WAKAGAMUCHIRWA",headline:"Tanga zvishoma.",italic:"Uri munzvimbo yako.",description:"Sarudza mutauro waunoda. Unogona kuongorora pasina akaundi.",language:"Sarudza mutauro wako",continue:"Pinda muZim Safe Minds",existing:"Une akaundi?",create:"Gadzira akaundi",login:"Pinda",guest:"Enderera pasina akaundi",note:"Akaunzi haidiwi kuti uone ruzivo nerubatsiro.",privacy:"Usanyora mashoko ehutano muchimiro cheakaundi.",urgent:"Rubatsiro rwechimbichimbi"},
  nd:{eyebrow:"SIYAKWAMUKELA",headline:"Qala kancane.",italic:"Indawo le ngeyakho.",description:"Khetha ulimi olufunayo. Ungahlola ungela-akhawunti.",language:"Khetha ulimi lwakho",continue:"Ngena kuZim Safe Minds",existing:"Ule-akhawunti?",create:"Vula i-akhawunti",login:"Ngena",guest:"Qhubeka ungela-akhawunti",note:"I-akhawunti ayidingeki ukuze uthole ulwazi losizo.",privacy:"Ungabhali imininingwane yempilakahle kufomu ye-akhawunti.",urgent:"Usizo oluphuthumayo"},
  en:{eyebrow:"YOU BELONG HERE",headline:"Come as you are.",italic:"Take your time.",description:"Choose the language that feels most comfortable. You can explore without an account.",language:"Choose your language",continue:"Enter Zim Safe Minds",existing:"Already have an account?",create:"Create account",login:"Sign in",guest:"Explore without an account",note:"An account is always optional. Explore support freely.",privacy:"Never put sensitive health information in your account details.",urgent:"Get urgent guidance"}
 } as const;
-export default function Entry({locale,onChoose,onEnter,onUrgent}:Props){
+export default function Entry({locale,user,onAuthenticated,onSignedOut,onChoose,onEnter,onUrgent}:Props){
  const [mode,setMode]=useState<Mode>("register");
  const [name,setName]=useState("");
  const [email,setEmail]=useState("");
@@ -18,14 +19,9 @@ export default function Entry({locale,onChoose,onEnter,onUrgent}:Props){
  const [adult,setAdult]=useState(false);
  const [busy,setBusy]=useState(false);
  const [notice,setNotice]=useState("");
- const [signedIn,setSignedIn]=useState("");
+ const [resetBusy,setResetBusy]=useState(false);
+ const signedIn=user?.email??"";
  const w=words[locale];
- useEffect(()=>{
-  if(!authClient)return;
-  let active=true;
-  authClient.auth.getUser().then(({data})=>{if(active)setSignedIn(data.user?.email??"");}).catch(()=>{});
-  return()=>{active=false;};
- },[]);
  async function submit(event:FormEvent<HTMLFormElement>){
   event.preventDefault();if(!authClient||busy)return;
   setNotice("");
@@ -38,22 +34,34 @@ export default function Entry({locale,onChoose,onEnter,onUrgent}:Props){
    if(mode==="register"){
     const {data,error}=await authClient.auth.signUp({email:userEmail,password,options:{data:{display_name:name.trim()},emailRedirectTo:window.location.origin+import.meta.env.BASE_URL}});
     if(error)throw error;
-    if(data.session){setSignedIn(data.user?.email??userEmail);setPassword("");onEnter();}
+    if(data.session){if(data.user)onAuthenticated(data.user);setPassword("");onEnter();}
     else{setPassword("");setNotice("Please check your email for a confirmation link. Account access starts only after verification.");}
    }else{
     const {data,error}=await authClient.auth.signInWithPassword({email:userEmail,password});
     if(error)throw error;
-    setSignedIn(data.user.email??userEmail);setPassword("");onEnter();
+    onAuthenticated(data.user);setPassword("");onEnter();
    }
   }catch(error){setNotice(error instanceof Error?error.message:"Unable to complete authentication. Please try again.");}
   finally{setBusy(false);}
+ }
+ async function requestReset(){
+  if(!authClient||resetBusy)return;
+  const address=email.trim().toLowerCase();
+  if(!address){setNotice("Enter your email address first.");return;}
+  setResetBusy(true);setNotice("");
+  try{
+   const {error}=await authClient.auth.resetPasswordForEmail(address,{redirectTo:window.location.origin+import.meta.env.BASE_URL});
+   if(error)throw error;
+   setNotice("If an account exists for that address, check your inbox for a password-reset link.");
+  }catch(e){setNotice(e instanceof Error?e.message:"Password reset is currently unavailable.");}
+  finally{setResetBusy(false);}
  }
  async function signOut(){
   if(!authClient)return;
   setBusy(true);
   const {error}=await authClient.auth.signOut();
   setBusy(false);
-  if(error){setNotice(error.message);}else{setSignedIn("");setNotice("You've signed out.");}
+  if(error){setNotice(error.message);}else{onSignedOut();setNotice("You've signed out.");}
  }
  return <div className="zsm-entry" aria-label="Zim Safe Minds welcome and account access">
   <div className="zsm-entry-spark spark-one"/><div className="zsm-entry-spark spark-two"/>
@@ -95,6 +103,7 @@ export default function Entry({locale,onChoose,onEnter,onUrgent}:Props){
        <label>Password<input autoComplete={mode==="register"?"new-password":"current-password"} type="password" required minLength={8} value={password} onChange={e=>setPassword(e.target.value)} placeholder="At least 8 characters"/></label>
        {mode==="register"&&<label className="zsm-adult-checkbox"><input type="checkbox" checked={adult} onChange={e=>setAdult(e.target.checked)}/> <span>I confirm I'm 18 or older and understand this is not a clinical service.</span></label>}
        <button className="zsm-access-submit" disabled={busy||mode==="register"&&!adult} type="submit">{busy?"Please wait…":mode==="register"?"Create my account ↗":"Sign in ↗"}</button>
+       {mode==="login"&&<button type="button" className="zsm-auth-reset-link" onClick={requestReset} disabled={busy||resetBusy}>{resetBusy?"Sending…":"Forgot your password? ↗"}</button>}
       </form>:<div className="zsm-auth-pending" role="status"><span>✳</span><strong>Account registration is being prepared.</strong><p>Secure sign-in requires the project's own authentication service. No account details or passwords are being collected yet.</p></div>}
       {notice&&<p className="zsm-access-notice" role="status">{notice}</p>}
       <button className="zsm-access-guest" type="button" onClick={onEnter}>{w.guest} <span aria-hidden="true">↗</span></button>
