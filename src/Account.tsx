@@ -25,25 +25,32 @@ export default function Account({user,locale,theme,recovery,onRecoveryComplete,o
   event.preventDefault();if(!authClient||busy)return;const value=name.trim();
   if(value.length<2||value.length>60){show("Use a name between 2 and 60 characters.");return;}
   setBusy(true);show("");
-  const {error}=await authClient.auth.updateUser({data:{display_name:value}});
-  setBusy(false);show(error?.message||"Profile updated successfully.");
+  try{
+   const {error}=await authClient.auth.updateUser({data:{display_name:value}});
+   show(error?.message||"Profile updated successfully.");
+  }catch(e){show(e instanceof Error?e.message:"Unable to save your profile.");}
+  finally{setBusy(false);}
  }
  async function updatePassword(event:FormEvent<HTMLFormElement>){
   event.preventDefault();if(!authClient||busy)return;
   if(password.length<8){show("Choose at least 8 characters.");return;}
   if(password!==confirm){show("Passwords do not match.");return;}
   setBusy(true);show("");
-  const {error}=await authClient.auth.updateUser({password});
-  setBusy(false);
-  if(error){show(error.message);return;}
-  setPassword("");setConfirm("");show("Your password has been updated.");
-  if(recovery)onRecoveryComplete();
+  try{
+   const {error}=await authClient.auth.updateUser({password});
+   if(error){show(error.message);return;}
+   setPassword("");setConfirm("");show("Your password has been updated.");
+   if(recovery)onRecoveryComplete();
+  }catch(e){show(e instanceof Error?e.message:"Unable to update your password.");}
+  finally{setBusy(false);}
  }
  async function logout(){
   if(!authClient||busy)return;setBusy(true);show("");
-  const {error}=await authClient.auth.signOut();
-  setBusy(false);
-  if(error)show(error.message);else onSignOut();
+  try{
+   const {error}=await authClient.auth.signOut();
+   if(error)show(error.message);else onSignOut();
+  }catch(e){show(e instanceof Error?e.message:"Sign-out failed. Please try again.");}
+  finally{setBusy(false);}
  }
  const joined=Number.isNaN(Date.parse(user.created_at))?"Unknown":new Intl.DateTimeFormat("en-ZW",{month:"long",year:"numeric"}).format(new Date(user.created_at));
  return <div className="zsm-profile-overlay" onMouseDown={e=>{if(e.target===e.currentTarget&&!recovery)onClose();}}>

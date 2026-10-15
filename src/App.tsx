@@ -65,7 +65,11 @@ export default function App(){
  useEffect(()=>{
   if(authReady&&!authUser&&accountOpen){setAccountOpen(false);setRecovery(false);setEntryOpen(true);}
  },[authReady,authUser,accountOpen]);
- const [theme,setTheme]=useState<Theme>("afterglow");
+ const [theme,setTheme]=useState<Theme>(()=>{
+  try{return localStorage.getItem("zsm.theme.v1")==="daylight"?"daylight":"afterglow";}
+  catch{return "afterglow";}
+ });
+ useEffect(()=>{try{localStorage.setItem("zsm.theme.v1",theme);}catch{ /* Browser storage may be unavailable. */ }},[theme]);
  const [mobile,setMobile]=useState(false);
  const [consent,setConsent]=useState(false);
  const [accepted,setAccepted]=useState(false);

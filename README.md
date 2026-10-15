@@ -157,3 +157,8 @@ Per team feedback, the floating glowing **original hero illustration** is kept i
 The generated brand mark (two figures forming an embracing heart and subtle signal line) is used consistently in the header, demo cards and conversation interface. The matching full **Zim Safe Minds** wordmark is shown in the footer on a pale sea-glass inset so its dark-blue lettering remains legible in Afterglow. It is not stretched or recolored. The new symbol is used for the 32-pixel browser favicon and 180-pixel Apple touch icon.
 
 Source assets: `public/brand/zim-safe-minds-mark.webp`, `public/brand/zim-safe-minds-wordmark.webp`, `public/favicon-32.png`, and `public/apple-touch-icon.png`. Assets are built from the approved generated artwork, resized and optimized for web delivery; no third-party logo fonts or image hosts are required. The icon has a quiet glow animation **only in the main header**, disabled for visitors who prefer reduced motion. Asset URLs honor Vite's base path, keeping Vercel and GitHub Pages compatible.
+
+
+## Authenticated account area (October 2026)
+
+Signing in now establishes a shared Supabase session for the navigation, including after refresh. The **Account** button opens **My profile**, **Preferences** (Shona / Ndebele / English and appearance), and **Security** (password change, recovery and sign out). Guest visitors still see the optional login/sign-up screen. Only basic Supabase Auth profile metadata is edited; health conversations are not saved to accounts. Language and theme preferences are stored locally in the browser, not in the user's medical record. Password-reset redirects must be allow-listed in Supabase.
