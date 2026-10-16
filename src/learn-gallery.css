@@ -1,0 +1,13 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css";
+@source "./Learn.tsx";
+@source "./components/LearnPostModal.tsx";
+@source "./components/GalleryIcon.tsx";
+@source "./data/learnData.ts";
+.zlearn{color-scheme:dark;isolation:isolate}.zlearn button{cursor:pointer}
+.zlg-iridescent{background:linear-gradient(96deg,#a2f2dc 0%,#b6defa 38%,#f4b7d4 72%,#ffe0a9 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.zlg-scroll{scrollbar-color:#447b7b transparent;scrollbar-width:thin}.zlg-card{animation:zlg-rise .55s backwards cubic-bezier(.19,1,.22,1)}
+.zlg-modal-screen{animation:zlg-fade .23s ease-out both}.zlg-dialog{animation:zlg-enter .32s cubic-bezier(.2,.85,.23,1) both}
+.zlg-modal-content{scrollbar-color:#4b8086 #122b37;scrollbar-width:thin}
+@keyframes zlg-fade{from{opacity:0}to{opacity:1}}@keyframes zlg-rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes zlg-enter{from{opacity:0;transform:translateY(16px) scale(.965)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){.zlearn *,.zlearn *::before,.zlearn *::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
